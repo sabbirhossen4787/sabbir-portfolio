@@ -1,0 +1,607 @@
+{
+  "siteSettings": {
+    "siteName": "Sabbir Hossen",
+    "brandTitle": "Graphics Designer & Video Editor",
+    "email": "contact@sabbirhossen.com",
+    "phone": "+880 1234 567890",
+    "location": "Dhaka, Bangladesh",
+    "availableStatus": "Available for new projects",
+    "accentColor": "#FF6B00"
+  },
+  "customSections": [],
+  "homepageSections": [
+    {
+      "id": "hero",
+      "name": "Hero Section",
+      "enabled": true,
+      "order": 1
+    },
+    {
+      "id": "services",
+      "name": "Services (What I Can Do)",
+      "enabled": true,
+      "order": 2
+    },
+    {
+      "id": "selectedProjects",
+      "name": "Selected Projects",
+      "enabled": true,
+      "order": 3
+    },
+    {
+      "id": "reels",
+      "name": "Short-Form Reels",
+      "enabled": true,
+      "order": 4
+    },
+    {
+      "id": "showreel",
+      "name": "Watch the Work",
+      "enabled": true,
+      "order": 5
+    },
+    {
+      "id": "about",
+      "name": "About Me",
+      "enabled": true,
+      "order": 6
+    },
+    {
+      "id": "process",
+      "name": "Process Flow",
+      "enabled": true,
+      "order": 7
+    },
+    {
+      "id": "tools",
+      "name": "Tools I Use",
+      "enabled": true,
+      "order": 8
+    },
+    {
+      "id": "testimonials",
+      "name": "What Clients Say",
+      "enabled": true,
+      "order": 9
+    },
+    {
+      "id": "cta",
+      "name": "Final CTA Banner",
+      "enabled": true,
+      "order": 10
+    }
+  ],
+  "elementOffsets": {
+    "hero.headlineAccent": {
+      "x": 52,
+      "y": -4,
+      "scale": 1.14,
+      "hide": false
+    },
+    "hero.headlineStart": {
+      "x": 0,
+      "y": 0,
+      "scale": 0.99,
+      "hide": false
+    },
+    "hero.heroImage": {
+      "x": 0,
+      "y": -75,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.secondaryBtnText": {
+      "x": 20,
+      "y": 0,
+      "scale": 1.08,
+      "hide": false
+    },
+    "hero.subheadline": {
+      "x": 4,
+      "y": 0,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.availabilityText": {
+      "x": 0,
+      "y": 0,
+      "scale": 1,
+      "hide": false
+    }
+  },
+  "responsiveElementOffsets": {
+    "mobile": {
+      "hero.headlineAccent": {
+        "x": 18,
+        "y": 9,
+        "scale": 1.09,
+        "hide": false,
+        "fontSize": 34
+      },
+      "hero.headlineStart": {
+        "x": 0,
+        "y": 15,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.subheadline": {
+        "x": 0,
+        "y": 5,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.availabilityText": {
+        "x": -15,
+        "y": 20,
+        "scale": 0.84,
+        "hide": false
+      },
+      "hero.primaryBtnText": {
+        "x": 0,
+        "y": 0,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.secondaryBtnText": {
+        "x": 5,
+        "y": 0,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.experienceYears": {
+        "x": 0,
+        "y": 0,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.completedProjects": {
+        "x": 0,
+        "y": 0,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.happyClients": {
+        "x": 0,
+        "y": 0,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.brands": {
+        "x": 0,
+        "y": 15,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.contentGroup": {
+        "x": 0,
+        "y": 63,
+        "scale": 1,
+        "hide": false
+      },
+      "about.aboutImage": {
+        "x": -2,
+        "y": 33,
+        "scale": 0.34,
+        "hide": false,
+        "opacity": 1,
+        "rotate": 0
+      }
+    },
+    "tablet": {}
+  },
+  "hero": {
+    "headlineStart": "Visual\nDesigner & ",
+    "headlineStartFontSize": 64,
+    "headlineAccent": "Video Editor",
+    "headlineAccentFontSize": 64,
+    "subheadline": "I create visual content that helps brands communicate, promote, and grow.",
+    "availabilityText": "Available for new projects",
+    "primaryBtnText": "View My Work",
+    "secondaryBtnText": "Watch Showreel",
+    "experienceYears": "6+",
+    "completedProjects": "100+",
+    "happyClients": "20+",
+    "heroImage": "/uploads/1790516247544_hero-bg.png",
+    "heroImageX": 25,
+    "heroImageY": 0,
+    "heroImageScale": 100,
+    "extraTexts": [],
+    "reviewCard": {
+      "show": true,
+      "text": "Sabbir delivered exactly what I needed. Creative, professional and super fast!",
+      "clientName": "Client Name",
+      "clientRole": "Business Owner",
+      "style": {
+        "x": -377,
+        "y": 263,
+        "width": 315,
+        "height": "auto",
+        "scale": 0.75,
+        "rotate": 0,
+        "opacity": 1,
+        "fontSize": 11,
+        "fontWeight": "normal",
+        "color": "#E5E7EB",
+        "accentColor": "#FF6B00",
+        "backgroundColor": "#121318",
+        "borderRadius": 16,
+        "padding": 16,
+        "zIndex": 20
+      }
+    },
+    "headlineStyle": {
+      "fontSize": 64,
+      "color": "#FFFFFF",
+      "accentColor": "#FF6B00",
+      "lineHeight": 1.05
+    },
+    "brands": [
+      "envato",
+      "Spotify",
+      "YouTube",
+      "Google",
+      "NIKE",
+      "adidas",
+      "Canva"
+    ],
+    "mobileHeroImage": "/uploads/1790638273517_hero-bg-mobile.png",
+    "mobileHeroImageX": 0,
+    "mobileHeroImageY": -36,
+    "mobileHeroImageScale": 100,
+    "mobileReviewCardShow": false,
+    "decorativeLine": {
+      "x": 0,
+      "y": 0,
+      "width": 100,
+      "height": 1,
+      "scale": 1,
+      "rotate": 0,
+      "opacity": 0.7,
+      "show": true
+    },
+    "primaryBtnUrl": "#portfolio"
+  },
+  "about": {
+    "label": "● About Me",
+    "headline": "A designer who cares about how the work ",
+    "highlightText": "actually works.",
+    "description": "I'm Sabbir Hossen, a Graphics Designer and Video Editor based in Bangladesh. I help brands turn their ideas into powerful visuals that attract, engage, and deliver real results.",
+    "aboutImage": "/uploads/1790639424273_ChatGPT_Image_Sep_29__2026__05_49_49_AM.png",
+    "aboutMobileImage": "",
+    "experienceYears": "6+",
+    "locationText": "Based in Bangladesh",
+    "availabilityText": "Available Worldwide",
+    "btnText": "More About Me"
+  },
+  "servicesMeta": {
+    "eyebrow": "MY SERVICES",
+    "title": "What I Can Do",
+    "highlight": "for You",
+    "description": "Professional visual solutions to bring your ideas to life. From design to video, I help brands stand out.",
+    "buttonText": "View All Services",
+    "buttonUrl": "/work"
+  },
+  "services": [
+    {
+      "id": "s1",
+      "num": "01",
+      "title": "Graphic Design",
+      "desc": "Social media graphics, banners, posters, thumbnails and more.",
+      "image": "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600",
+      "order": 1,
+      "enabled": true
+    },
+    {
+      "id": "s2",
+      "num": "02",
+      "title": "Video Editing",
+      "desc": "Professional video editing for social media, YouTube and brands.",
+      "image": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600",
+      "order": 2,
+      "enabled": true
+    },
+    {
+      "id": "s3",
+      "num": "03",
+      "title": "Product Creatives",
+      "desc": "Eye-catching product visuals and advertising creatives.",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600",
+      "order": 3,
+      "enabled": true
+    },
+    {
+      "id": "s4",
+      "num": "04",
+      "title": "Social Media Content",
+      "desc": "Engaging content designed for all modern platforms.",
+      "image": "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600",
+      "order": 4,
+      "enabled": true
+    },
+    {
+      "id": "s5",
+      "num": "05",
+      "title": "YouTube & Creator",
+      "desc": "Thumbnails, video content and complete creator support.",
+      "image": "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=600",
+      "order": 5,
+      "enabled": true
+    }
+  ],
+  "reels": [
+    {
+      "id": "r1",
+      "title": "Product Commercial",
+      "views": "125K",
+      "client": "Brand",
+      "thumbnail": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500",
+      "order": 1,
+      "published": true
+    },
+    {
+      "id": "r2",
+      "title": "Dynamic Streetwear",
+      "views": "342K",
+      "client": "Apparel",
+      "thumbnail": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500",
+      "order": 2,
+      "published": true
+    },
+    {
+      "id": "r3",
+      "title": "Headphone Beat Cut",
+      "views": "342K",
+      "client": "Audio Tech",
+      "thumbnail": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500",
+      "order": 3,
+      "published": true
+    },
+    {
+      "id": "r4",
+      "title": "Sports Car Cinema",
+      "views": "412K",
+      "client": "Automotive",
+      "thumbnail": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500",
+      "order": 4,
+      "published": true
+    }
+  ],
+  "tools": [
+    {
+      "id": "t1",
+      "name": "Photoshop",
+      "tag": "Ps",
+      "category": "Design",
+      "enabled": true
+    },
+    {
+      "id": "t2",
+      "name": "Illustrator",
+      "tag": "Ai",
+      "category": "Design",
+      "enabled": true
+    },
+    {
+      "id": "t3",
+      "name": "Premiere Pro",
+      "tag": "Pr",
+      "category": "Video",
+      "enabled": true
+    },
+    {
+      "id": "t4",
+      "name": "After Effects",
+      "tag": "Ae",
+      "category": "Motion",
+      "enabled": true
+    },
+    {
+      "id": "t5",
+      "name": "DaVinci Resolve",
+      "tag": "Dv",
+      "category": "Color",
+      "enabled": true
+    },
+    {
+      "id": "t6",
+      "name": "CapCut",
+      "tag": "Cc",
+      "category": "Shorts",
+      "enabled": true
+    },
+    {
+      "id": "t7",
+      "name": "Figma",
+      "tag": "Fg",
+      "category": "UI",
+      "enabled": true
+    },
+    {
+      "id": "t8",
+      "name": "Canva",
+      "tag": "Cv",
+      "category": "Graphics",
+      "enabled": true
+    }
+  ],
+  "process": [
+    {
+      "id": "pr1",
+      "num": "01",
+      "title": "Understand",
+      "desc": "Learn about your goals and requirements.",
+      "enabled": true
+    },
+    {
+      "id": "pr2",
+      "num": "02",
+      "title": "Plan",
+      "desc": "Create a strategy and visual direction.",
+      "enabled": true
+    },
+    {
+      "id": "pr3",
+      "num": "03",
+      "title": "Create",
+      "desc": "Design and edit with creativity.",
+      "enabled": true
+    },
+    {
+      "id": "pr4",
+      "num": "04",
+      "title": "Refine",
+      "desc": "Get your feedback and make revisions.",
+      "enabled": true
+    },
+    {
+      "id": "pr5",
+      "num": "05",
+      "title": "Deliver",
+      "desc": "Final delivery with 100% satisfaction.",
+      "enabled": true
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "tm1",
+      "name": "Client Name",
+      "role": "Role / Company",
+      "quote": "Sabbir delivered exactly what I needed. Creative, professional and super fast!",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80",
+      "rating": 5,
+      "published": true
+    },
+    {
+      "id": "tm2",
+      "name": "Business Partner",
+      "role": "Founder · Media Lab",
+      "quote": "The visual quality and speed of delivery were truly international grade.",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80",
+      "rating": 5,
+      "published": true
+    }
+  ],
+  "showreel": {
+    "title": "Watch",
+    "highlight": "the Work",
+    "description": "A quick look at my editing style, visual quality and creative approach.",
+    "videoUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1",
+    "thumbnail": "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1200",
+    "duration": "01:24"
+  },
+  "cta": {
+    "eyebrow": "LET'S WORK TOGETHER",
+    "headline": "Have a ",
+    "highlight": "Project",
+    "description": "Let's create something amazing together! I'm always open to discussing new projects, ideas, or opportunities.",
+    "buttonText": "Get In Touch",
+    "buttonUrl": "mailto:contact@sabbirhossen.com",
+    "noteText": "Open for new projects worldwide"
+  },
+  "projects": [
+    {
+      "id": "p1",
+      "slug": "product-campaign",
+      "title": "Product Campaign",
+      "category": "Graphic Design",
+      "projectType": "Client Work",
+      "year": "2026",
+      "client": "Tech Brand",
+      "coverImage": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+      "shortDesc": "A premium product promotional visual designed for an international commercial campaign.",
+      "role": "Art Direction & Graphic Design",
+      "tools": "Adobe Photoshop, Illustrator",
+      "deliverables": "Social Media Posters, Banners",
+      "featured": true,
+      "published": true,
+      "order": 1,
+      "gallery": [
+        {
+          "id": "g1",
+          "url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200",
+          "layout": "full",
+          "widthPercent": 100,
+          "alignment": "center",
+          "caption": "Master 4K Visual",
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "scale": 1,
+          "rotate": 0,
+          "zIndex": 1,
+          "hidden": false
+        },
+        {
+          "id": "g2",
+          "url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800",
+          "layout": "half",
+          "widthPercent": 50,
+          "alignment": "left",
+          "caption": "Angle Variation",
+          "x": 52,
+          "y": 0,
+          "width": 50,
+          "scale": 1,
+          "rotate": 0,
+          "zIndex": 2,
+          "hidden": false
+        },
+        {
+          "id": "g3",
+          "url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800",
+          "layout": "half",
+          "widthPercent": 50,
+          "alignment": "right",
+          "caption": "Packaging Mockup",
+          "x": 0,
+          "y": 320,
+          "width": 50,
+          "scale": 1,
+          "rotate": 0,
+          "zIndex": 3,
+          "hidden": false
+        }
+      ]
+    }
+  ],
+  "media": [
+    {
+      "id": "1790515956284",
+      "url": "/uploads/1790515956281_profile.png",
+      "name": "profile.png",
+      "type": "image",
+      "size": "1.80 MB",
+      "uploadedAt": "9/27/2026"
+    },
+    {
+      "id": "1790515603453",
+      "url": "/uploads/1790515603450_hero-bg.png",
+      "name": "hero-bg.png",
+      "type": "image",
+      "size": "1.68 MB",
+      "uploadedAt": "9/27/2026"
+    },
+    {
+      "id": "1790515576745",
+      "url": "/uploads/1790515576743_hero-bg.png",
+      "name": "hero-bg.png",
+      "type": "image",
+      "size": "1.68 MB",
+      "uploadedAt": "9/27/2026"
+    }
+  ],
+  "heroImage": "",
+  "aboutImage": "",
+  "headline": "Graphics Designer & Video Editor",
+  "subheadline": "I create visual content that helps brands communicate, promote, and grow.",
+  "experienceYears": "6+",
+  "completedProjects": "100+",
+  "happyClients": "20+",
+  "reviewCardShow": true,
+  "reviewCardOffsetY": 120,
+  "reviewCardOffsetX": 0,
+  "reviewCardScale": 95,
+  "reviewCardText": "Sabbir delivered exactly what I needed. Creative, professional and super fast!",
+  "reviewClientName": "Client Name",
+  "reviewClientRole": "Business Owner"
+}
