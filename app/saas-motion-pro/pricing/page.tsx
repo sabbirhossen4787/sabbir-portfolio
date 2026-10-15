@@ -11,15 +11,15 @@ const PLANS = [
     id: 'plan_creator',
     name: 'Creator License',
     tagline: 'Ideal for solo freelance animators & indie creators.',
-    price: 49,
-    originalPrice: 79,
+    price: 1999,
+    originalPrice: 3499,
     devices: 1,
     popular: false,
     features: [
       '1 Active Workstation Seat (Mac or PC)',
       'All 300+ Kinetic & Shape FFX Presets',
+      'Smart Toolkit (Comps, Nulls, Layers & Physics)',
       'AI Voice Studio (Gemini 2.0 / 3.8 Flash TTS)',
-      'Smart Nulls, Solid & Adjustment Helpers',
       'Non-destructive 3x3 Anchor Point Mover',
       'Lifetime Free Updates for v1.x',
       'Community & Email Support'
@@ -29,8 +29,8 @@ const PLANS = [
     id: 'plan_studio',
     name: 'Studio Commercial',
     tagline: 'The standard for motion studios and professional editors.',
-    price: 89,
-    originalPrice: 149,
+    price: 3499,
+    originalPrice: 5999,
     devices: 2,
     popular: true,
     features: [
@@ -48,8 +48,8 @@ const PLANS = [
     id: 'plan_lifetime',
     name: 'Lifetime Enterprise VIP',
     tagline: 'Maximum power and seat capacity for creative agencies.',
-    price: 149,
-    originalPrice: 249,
+    price: 5999,
+    originalPrice: 9999,
     devices: 4,
     popular: false,
     features: [
@@ -129,9 +129,9 @@ export default function PricingPage() {
               <p className="text-xs text-purple-300/70 mb-6 min-h-[32px]">{plan.tagline}</p>
 
               <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-4xl sm:text-5xl font-black text-white">${plan.price}</span>
-                <span className="text-sm text-purple-400 line-through">${plan.originalPrice}</span>
-                <span className="text-xs text-purple-300 font-mono ml-auto">USD / Perpetual</span>
+                <span className="text-4xl sm:text-5xl font-black text-white">৳{plan.price.toLocaleString()}</span>
+                <span className="text-sm text-purple-400 line-through">৳{plan.originalPrice.toLocaleString()}</span>
+                <span className="text-xs text-purple-300 font-mono ml-auto">BDT / Perpetual</span>
               </div>
 
               <div className="border-t border-purple-900/40 pt-6 mb-8">

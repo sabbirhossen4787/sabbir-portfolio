@@ -24,10 +24,10 @@ import {
   ExternalLink
 } from 'lucide-react';
 
-const PLANS_DATA: Record<string, { id: string; name: string; price: number; devices: number }> = {
-  plan_creator: { id: 'plan_creator', name: 'Creator License', price: 49, devices: 1 },
-  plan_studio: { id: 'plan_studio', name: 'Studio Commercial', price: 89, devices: 2 },
-  plan_lifetime: { id: 'plan_lifetime', name: 'Lifetime Enterprise VIP', price: 149, devices: 4 }
+const PLANS_DATA: Record<string, { id: string; name: string; bdtPrice: number; devices: number }> = {
+  plan_creator: { id: 'plan_creator', name: 'Creator License', bdtPrice: 1999, devices: 1 },
+  plan_studio: { id: 'plan_studio', name: 'Studio Commercial', bdtPrice: 3499, devices: 2 },
+  plan_lifetime: { id: 'plan_lifetime', name: 'Lifetime Enterprise VIP', bdtPrice: 5999, devices: 4 }
 };
 
 interface PaymentSettings {
@@ -43,6 +43,11 @@ interface PaymentSettings {
   bankInstructions: string;
   bankEnabled: boolean;
   usdToBdtRate: number;
+  creatorPriceBdt?: number;
+  studioPriceBdt?: number;
+  lifetimePriceBdt?: number;
+  supportEmail?: string;
+  supportPhone?: string;
 }
 
 interface OrderStatusData {
@@ -52,6 +57,7 @@ interface OrderStatusData {
   customerName: string;
   planName: string;
   amountUsd: number;
+  amountPaid?: string;
   paymentMethod: string;
   transactionId: string;
   senderNumber: string;
@@ -111,7 +117,11 @@ function CheckoutContent() {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const currentPlan = PLANS_DATA[selectedPlanId] || PLANS_DATA.plan_studio;
-  const bdtTotal = Math.round(currentPlan.price * (settings.usdToBdtRate || 125));
+  const bdtTotal = selectedPlanId === 'plan_creator'
+    ? (settings.creatorPriceBdt || 1999)
+    : selectedPlanId === 'plan_studio'
+    ? (settings.studioPriceBdt || 3499)
+    : (settings.lifetimePriceBdt || 5999);
 
   // 1. Fetch public payment settings
   useEffect(() => {
@@ -120,9 +130,14 @@ function CheckoutContent() {
         const res = await fetch('/api/payment/settings');
         if (res.ok) {
           const data = await res.json();
-          if (data.settings) {
-            setSettings(prev => ({ ...prev, ...data.settings }));
-            if (!data.settings.bkashEnabled && data.settings.bankEnabled) {
+          const s = data.settings || data;
+          if (s) {
+            setSettings(prev => ({
+              ...prev,
+              ...s,
+              bankAccountHolder: s.bankAccountHolder || s.bankAccountName || prev.bankAccountHolder
+            }));
+            if (!s.bkashEnabled && s.bankEnabled) {
               setPaymentMethod('bank');
             }
           }
@@ -134,16 +149,12 @@ function CheckoutContent() {
     loadSettings();
   }, []);
 
-  // Update amountPaid recommendation when plan or rate changes
+  // Update amountPaid recommendation when plan changes
   useEffect(() => {
     if (!amountPaid || amountPaid.startsWith('৳') || amountPaid.startsWith('$')) {
-      if (paymentMethod === 'bkash') {
-        setAmountPaid(`৳${bdtTotal}`);
-      } else {
-        setAmountPaid(`৳${bdtTotal} (${currentPlan.price} USD)`);
-      }
+      setAmountPaid(`৳${bdtTotal.toLocaleString()} BDT`);
     }
-  }, [selectedPlanId, paymentMethod, bdtTotal, currentPlan.price]);
+  }, [selectedPlanId, bdtTotal]);
 
   // 2. Poll order status if activeOrderId is present
   useEffect(() => {
@@ -461,7 +472,7 @@ function CheckoutContent() {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-purple-400">Plan Selected</span>
-              <span className="text-white font-medium">{orderStatus.planName} (${orderStatus.amountUsd} USD)</span>
+              <span className="text-white font-medium">{orderStatus.planName} {orderStatus.amountPaid ? `(${orderStatus.amountPaid})` : ''}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-purple-400">Payment Channel</span>
@@ -615,7 +626,7 @@ function CheckoutContent() {
 
                 <div className="space-y-1.5 text-purple-300/80 leading-relaxed text-[11px]">
                   <p>1. Open your <strong>bKash App</strong> and tap <strong>Send Money</strong>.</p>
-                  <p>2. Send exact amount: <strong className="text-white font-mono">৳{bdtTotal.toLocaleString()} BDT</strong> (${currentPlan.price} USD at {settings.usdToBdtRate} BDT/USD).</p>
+                  <p>2. Send exact amount: <strong className="text-white font-mono">৳{bdtTotal.toLocaleString()} BDT</strong>.</p>
                   <p>3. Use your name or email in the reference.</p>
                   <p>4. After sending, copy the <strong>Transaction ID (TrxID)</strong> and upload a screenshot below.</p>
                 </div>
@@ -675,7 +686,7 @@ function CheckoutContent() {
                 </div>
 
                 <p className="text-[11px] text-purple-300/80 leading-relaxed">
-                  Send <strong>৳{bdtTotal.toLocaleString()} BDT</strong> (${currentPlan.price} USD) and provide the Bank Transaction Reference / Depositor Name below.
+                  Send <strong>৳{bdtTotal.toLocaleString()} BDT</strong> and provide the Bank Transaction Reference / Depositor Name below.
                 </p>
               </div>
             )}
@@ -848,30 +859,38 @@ function CheckoutContent() {
 
           {/* Plan Picker */}
           <div className="space-y-2.5">
-            {Object.entries(PLANS_DATA).map(([id, p]) => (
-              <label
-                key={id}
-                onClick={() => setSelectedPlanId(id)}
-                className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer text-xs transition ${
-                  selectedPlanId === id
-                    ? 'bg-purple-900/30 border-purple-500 text-white shadow-lg shadow-purple-900/20'
-                    : 'bg-[#080614] border-purple-900/40 text-purple-300 hover:border-purple-700/60'
-                }`}
-              >
-                <div>
-                  <div className="font-bold text-sm">{p.name}</div>
-                  <div className="text-[11px] text-purple-400 font-mono mt-0.5">
-                    {p.devices} Workstation {p.devices === 1 ? 'Seat' : 'Seats'} &bull; Perpetual
+            {Object.entries(PLANS_DATA).map(([id, p]) => {
+              const displayBdt = id === 'plan_creator'
+                ? (settings.creatorPriceBdt || p.bdtPrice)
+                : id === 'plan_studio'
+                ? (settings.studioPriceBdt || p.bdtPrice)
+                : (settings.lifetimePriceBdt || p.bdtPrice);
+
+              return (
+                <label
+                  key={id}
+                  onClick={() => setSelectedPlanId(id)}
+                  className={`p-3.5 rounded-2xl border flex items-center justify-between cursor-pointer text-xs transition ${
+                    selectedPlanId === id
+                      ? 'bg-purple-900/30 border-purple-500 text-white shadow-lg shadow-purple-900/20'
+                      : 'bg-[#080614] border-purple-900/40 text-purple-300 hover:border-purple-700/60'
+                  }`}
+                >
+                  <div>
+                    <div className="font-bold text-sm">{p.name}</div>
+                    <div className="text-[11px] text-purple-400 font-mono mt-0.5">
+                      {p.devices} Workstation {p.devices === 1 ? 'Seat' : 'Seats'} &bull; Perpetual
+                    </div>
                   </div>
-                </div>
-                <div className="text-right">
-                  <div className="font-extrabold text-base text-white">${p.price}</div>
-                  <div className="text-[11px] font-mono text-purple-400">
-                    ৳{Math.round(p.price * settings.usdToBdtRate).toLocaleString()}
+                  <div className="text-right">
+                    <div className="font-extrabold text-base text-white">৳{displayBdt.toLocaleString()}</div>
+                    <div className="text-[11px] font-mono text-purple-400">
+                      BDT Perpetual
+                    </div>
                   </div>
-                </div>
-              </label>
-            ))}
+                </label>
+              );
+            })}
           </div>
 
           <div className="border-t border-purple-900/40 pt-4 space-y-2.5 text-xs text-purple-300">
@@ -892,8 +911,8 @@ function CheckoutContent() {
               <span className="text-white font-medium">macOS & Windows</span>
             </div>
             <div className="flex justify-between">
-              <span>Exchange Rate:</span>
-              <span className="font-mono text-purple-300">1 USD = {settings.usdToBdtRate} BDT</span>
+              <span>Currency:</span>
+              <span className="font-mono text-emerald-400 font-medium">BDT (Bangladeshi Taka ৳)</span>
             </div>
 
             <div className="flex justify-between items-baseline pt-3 border-t border-purple-900/40 text-sm font-bold text-white">
@@ -903,7 +922,7 @@ function CheckoutContent() {
                   ৳{bdtTotal.toLocaleString()} BDT
                 </div>
                 <div className="text-xs text-purple-400 font-mono font-normal">
-                  (${currentPlan.price}.00 USD)
+                  One-Time Payment
                 </div>
               </div>
             </div>

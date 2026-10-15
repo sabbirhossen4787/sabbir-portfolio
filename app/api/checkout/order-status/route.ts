@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
             customerName: order.customer_name,
             planName: order.plan_name,
             amountUsd: Number(order.amount_cents || 0) / 100,
+            amountPaid: (order.amount_paid as string) || (order.amount_cents ? `৳${(Number(order.amount_cents) / 100).toLocaleString()} BDT` : ''),
             paymentMethod: order.payment_method,
             transactionId: order.transaction_id,
             senderNumber: order.sender_number,

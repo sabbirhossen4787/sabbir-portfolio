@@ -164,16 +164,33 @@ export async function initDb(): Promise<void> {
             // Ignore if exists
         }
 
+        // Safe column migrations for payment_settings table
+        const paymentSettingsColsToAdd = [
+            "plugin_download_url TEXT DEFAULT ''",
+            "support_email TEXT DEFAULT 'myselfsabbirhossen@gmail.com'",
+            "support_phone TEXT DEFAULT '+8801794232652'",
+            "creator_price_bdt INTEGER DEFAULT 1999",
+            "studio_price_bdt INTEGER DEFAULT 3499",
+            "lifetime_price_bdt INTEGER DEFAULT 5999"
+        ];
+        for (const col of paymentSettingsColsToAdd) {
+            try {
+                await db.execute(`ALTER TABLE payment_settings ADD COLUMN ${col}`);
+            } catch {
+                // Column likely already exists
+            }
+        }
+
         // Seed default Payment Settings if not present
         const nowIso = new Date().toISOString();
         try {
             await db.execute({
                 sql: `INSERT OR IGNORE INTO payment_settings (
                     id, bkash_number, bkash_account_type, bkash_instructions, bkash_enabled,
-                    bank_name, bank_account_name, bank_account_number, bank_branch, bank_routing_number, bank_instructions, bank_enabled, usd_to_bdt_rate, updated_at
+                    bank_name, bank_account_name, bank_account_number, bank_branch, bank_routing_number, bank_instructions, bank_enabled, usd_to_bdt_rate, plugin_download_url, support_email, support_phone, creator_price_bdt, studio_price_bdt, lifetime_price_bdt, updated_at
                 ) VALUES (
                     'default', '01794232652', 'Personal', 'Send Money to our bKash personal number and enter the Transaction ID (TrxID) below.', 1,
-                    'Islami Bank Bangladesh Ltd', 'Sabbir Hossen', '20501234567890', 'Dhanmondi Branch, Dhaka', '125272345', 'Transfer the total amount via BEFTN/NPSB/Internet Banking and enter the bank transaction reference below.', 1, 125.0, ?
+                    'Islami Bank Bangladesh Ltd', 'Sabbir Hossen', '20501234567890', 'Dhanmondi Branch, Dhaka', '125272345', 'Transfer the total amount via BEFTN/NPSB/Internet Banking and enter the bank transaction reference below.', 1, 125.0, '', 'myselfsabbirhossen@gmail.com', '+8801794232652', 1999, 3499, 5999, ?
                 )`,
                 args: [nowIso]
             });

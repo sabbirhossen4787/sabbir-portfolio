@@ -42,17 +42,40 @@ export class CryptoSigner {
     }
 
     private getSigningKey(): string {
+        let key = '';
         if (this.privateKey !== undefined) {
-            return this.privateKey;
+            key = this.privateKey;
+        } else {
+            key =
+                process.env.LICENSING_PRIVATE_KEY ||
+                process.env.LICENSE_SIGNING_PRIVATE_KEY ||
+                process.env.LICENSE_PRIVATE_KEY ||
+                process.env.PRIVATE_SIGNING_KEY ||
+                SERVER_PRIVATE_KEY ||
+                '';
         }
-        return process.env.LICENSING_PRIVATE_KEY || SERVER_PRIVATE_KEY || '';
+        if (key && typeof key === 'string') {
+            return key.replace(/\\n/g, '\n');
+        }
+        return '';
     }
 
     private getVerificationKey(): string {
+        let key = '';
         if (this.publicKey !== undefined) {
-            return this.publicKey;
+            key = this.publicKey;
+        } else {
+            key =
+                process.env.LICENSING_PUBLIC_KEY ||
+                process.env.LICENSE_SIGNING_PUBLIC_KEY ||
+                process.env.NEXT_PUBLIC_LICENSING_PUBLIC_KEY ||
+                SERVER_PUBLIC_KEY ||
+                '';
         }
-        return process.env.LICENSING_PUBLIC_KEY || SERVER_PUBLIC_KEY || '';
+        if (key && typeof key === 'string') {
+            return key.replace(/\\n/g, '\n');
+        }
+        return '';
     }
 
     /**

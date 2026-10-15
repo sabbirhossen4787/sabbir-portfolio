@@ -18,6 +18,8 @@ export interface LicenseEmailOptions {
     tier: string;
     expiresAt: string | null;
     idempotencyKey?: string;
+    downloadUrl?: string;
+    supportEmail?: string;
 }
 
 export interface AdminPaymentSubmittedOptions {
@@ -142,11 +144,32 @@ export class EmailService {
         const webhookUrl = process.env.EMAIL_WEBHOOK_URL?.trim();
         const idempotencyKey = options.idempotencyKey || `license-${orderId}`;
 
-        const subject = `Your SaaS Motion Pro Commercial License & Setup Guide (Order #${orderId})`;
-        const expiryText = expiresAt ? new Date(expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Perpetual Lifetime Access';
+        // Fetch configured official download link and support details from database if not explicitly passed
+        let officialDownloadUrl = options.downloadUrl ? options.downloadUrl.trim() : '';
+        let supportContactEmail = options.supportEmail ? options.supportEmail.trim() : 'myselfsabbirhossen@gmail.com';
 
-        const downloadUrl = `${this.BASE_URL}/saas-motion-pro/download`;
+        if (!officialDownloadUrl) {
+            try {
+                await initDb();
+                const db = getDb();
+                const setRes = await db.execute("SELECT plugin_download_url, support_email FROM payment_settings WHERE id = 'default'");
+                if (setRes.rows[0]) {
+                    if (setRes.rows[0].plugin_download_url) {
+                        officialDownloadUrl = String(setRes.rows[0].plugin_download_url).trim();
+                    }
+                    if (setRes.rows[0].support_email) {
+                        supportContactEmail = String(setRes.rows[0].support_email).trim();
+                    }
+                }
+            } catch (e) {
+                // Fallback to customer portal URL
+            }
+        }
+
+        const effectiveDownloadUrl = officialDownloadUrl || `${this.BASE_URL}/saas-motion-pro/download`;
         const dashboardUrl = `${this.BASE_URL}/saas-motion-pro/dashboard?key=${encodeURIComponent(licenseKey)}`;
+        const subject = `Your SaaS Motion Pro Commercial License & Download Link (Order #${orderId})`;
+        const expiryText = expiresAt ? new Date(expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Perpetual Lifetime Access';
 
         const htmlContent = `
 <!DOCTYPE html>
@@ -161,15 +184,16 @@ export class EmailService {
     .badge { display: inline-block; padding: 6px 14px; background-color: #2E1065; color: #C084FC; border: 1px solid #7E22CE; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; }
     h1 { font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 0 0 12px 0; letter-spacing: -0.5px; }
     p { font-size: 14px; line-height: 1.65; color: #D8B4FE; margin: 0 0 18px 0; }
-    .key-box { background: linear-gradient(135deg, #0A0812 0%, #17112E 100%); border: 2px solid #7C3AED; border-radius: 14px; padding: 22px; text-align: center; margin: 28px 0; box-shadow: 0 0 24px rgba(124, 58, 237, 0.25); }
+    .key-box { background: linear-gradient(135deg, #0A0812 0%, #17112E 100%); border: 2px solid #7C3AED; border-radius: 14px; padding: 22px; text-align: center; margin: 24px 0; box-shadow: 0 0 24px rgba(124, 58, 237, 0.25); }
     .key-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #A78BFA; margin-bottom: 10px; font-family: 'SF Mono', Consolas, monospace; font-weight: 700; }
     .key-value { font-family: 'SF Mono', Consolas, 'Courier New', monospace; font-size: 21px; font-weight: 800; color: #FFFFFF; letter-spacing: 2.5px; word-break: break-all; user-select: all; }
+    .download-card { background: linear-gradient(135deg, #181135 0%, #0d0a22 100%); border: 2px solid #9333EA; border-radius: 14px; padding: 22px; text-align: center; margin: 24px 0; }
     .details-table { width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 13px; }
     .details-table td { padding: 10px 0; border-bottom: 1px solid #281F47; color: #EDE9FE; }
     .details-table td.label { color: #8B7BB8; width: 38%; font-family: 'SF Mono', Consolas, monospace; font-size: 12px; }
-    .btn-row { margin: 28px 0; text-align: center; }
-    .btn { display: inline-block; background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); color: #FFFFFF !important; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 13px; margin: 6px; box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4); }
-    .btn-secondary { background: #241A47; color: #DDD6FE !important; border: 1px solid #4C3D7A; box-shadow: none; }
+    .btn-row { margin: 20px 0; text-align: center; }
+    .btn { display: inline-block; background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%); color: #FFFFFF !important; padding: 14px 28px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 14px; margin: 6px; box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4); }
+    .btn-secondary { background: #241A47; color: #DDD6FE !important; border: 1px solid #4C3D7A; box-shadow: none; font-size: 13px; }
     .steps { background-color: #0A0812; border: 1px solid #281F47; border-radius: 12px; padding: 20px 24px; margin: 24px 0; font-size: 13px; color: #D8B4FE; line-height: 1.6; }
     .steps ol { margin: 8px 0 0 0; padding-left: 20px; }
     .steps li { margin-bottom: 10px; }
@@ -182,14 +206,30 @@ export class EmailService {
     <div class="badge">Payment Verified &amp; Confirmed</div>
     <h1>Welcome to SaaS Motion Pro!</h1>
     <p>Hi <strong>${customerName}</strong>,</p>
-    <p>Your manual payment for <strong>Order #${orderId}</strong> has been verified by our team. Your commercial license has been issued and registered on the server.</p>
+    <p>Your payment for <strong>Order #${orderId}</strong> has been verified and approved by our team. Your commercial license has been issued and registered on the server.</p>
     
     <div class="key-box">
       <div class="key-label">Your Commercial License Key</div>
       <div class="key-value">${licenseKey}</div>
     </div>
 
+    <!-- Official Download Link Box -->
+    <div class="download-card">
+      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #C084FC; font-weight: 700; margin-bottom: 8px;">Official Plugin Download Package</div>
+      <p style="color: #E9D5FF; font-size: 13px; margin: 0 0 14px 0;">Click below to download the latest authenticated SaaS Motion Pro release package:</p>
+      <a href="${effectiveDownloadUrl}" class="btn" style="padding: 14px 30px; font-size: 14px;">
+        📥 Download SaaS Motion Pro
+      </a>
+      <div style="font-size: 11px; color: #A78BFA; margin-top: 12px; word-break: break-all;">
+        Direct Link: <a href="${effectiveDownloadUrl}" style="color: #DDD6FE; text-decoration: underline;">${effectiveDownloadUrl}</a>
+      </div>
+    </div>
+
     <table class="details-table">
+      <tr>
+        <td class="label">Product:</td>
+        <td><strong>SaaS Motion Pro for After Effects</strong></td>
+      </tr>
       <tr>
         <td class="label">Plan:</td>
         <td><strong>${planName}</strong></td>
@@ -209,29 +249,25 @@ export class EmailService {
     </table>
 
     <div class="btn-row">
-      <a href="${downloadUrl}" class="btn">Download Extension (.ZIP)</a>
-      <a href="${dashboardUrl}" class="btn btn-secondary">Manage Active Seats</a>
+      <a href="${dashboardUrl}" class="btn btn-secondary">Manage Active Seats in Dashboard</a>
     </div>
 
     <div class="steps">
       <strong style="color: #FFFFFF; font-size: 14px;">Quick 2-Minute After Effects Setup:</strong>
       <ol>
-        <li>Download and extract the ZIP archive for macOS or Windows.</li>
-        <li>Copy the <code>com.saasmotion.panel</code> folder into your Adobe CEP extensions folder:
+        <li>Download the extension package using your official link above.</li>
+        <li>Extract the ZIP archive and copy the <code>com.saasmotion.panel</code> folder into your Adobe CEP extensions folder:
           <br>&bull; <strong>macOS:</strong> <code>~/Library/Application Support/Adobe/CEP/extensions/</code>
           <br>&bull; <strong>Windows:</strong> <code>C:\\Program Files (x86)\\Common Files\\Adobe\\CEP\\extensions\\</code>
         </li>
-        <li>Enable CEP debug mode once in Terminal / CMD if needed:
-          <br>&bull; <strong>macOS:</strong> <code>defaults write com.adobe.CSXS.16 PlayerDebugMode 1</code>
-        </li>
         <li>Open After Effects &rarr; <strong>Window &rarr; Extensions &rarr; SaaS Motion Pro</strong>.</li>
-        <li>Enter your license key <code>${licenseKey}</code> and activate your workstation.</li>
+        <li>Paste your commercial license key: <code>${licenseKey}</code> and activate your workstation.</li>
       </ol>
     </div>
 
     <div class="footer">
       SaaS Motion Pro &bull; Official Licensing Authority &bull; <a href="${this.BASE_URL}" style="color:#A78BFA; text-decoration:none;">sabbirhossen.site</a>
-      <br>Need assistance? Contact our engineering team at <a href="mailto:myselfsabbirhossen@gmail.com" style="color:#A78BFA; text-decoration:none;">myselfsabbirhossen@gmail.com</a>
+      <br>Need assistance? Contact our engineering team at <a href="mailto:${supportContactEmail}" style="color:#A78BFA; text-decoration:none;">${supportContactEmail}</a>
     </div>
   </div>
 </body>
@@ -246,26 +282,30 @@ Hi ${customerName},
 Your payment for Order #${orderId} has been verified and confirmed.
 Your commercial license is now active.
 
+PRODUCT: SaaS Motion Pro for After Effects
+PLAN: ${planName}
+SEATS: ${maxDevices} Active Workstation(s)
+TERM: ${expiryText}
+ORDER REFERENCE: ${orderId}
+
 YOUR COMMERCIAL LICENSE KEY:
 ${licenseKey}
 
-Plan: ${planName}
-Seats: ${maxDevices} Active Workstation(s)
-Term: ${expiryText}
-Order Reference: ${orderId}
+OFFICIAL PLUGIN DOWNLOAD LINK:
+${effectiveDownloadUrl}
 
-DOWNLOAD & SETUP:
-1. Download Extension: ${downloadUrl}
-2. Extract and copy the extension folder to your Adobe CEP extensions folder:
+AFTER EFFECTS SETUP INSTRUCTIONS:
+1. Download the release archive using the link above.
+2. Extract and copy the 'com.saasmotion.panel' folder into your Adobe CEP extensions folder:
    - macOS: ~/Library/Application Support/Adobe/CEP/extensions/
    - Windows: C:\\Program Files (x86)\\Common Files\\Adobe\\CEP\\extensions\\
-3. In After Effects, go to Window -> Extensions -> SaaS Motion Pro.
+3. In After Effects, navigate to Window -> Extensions -> SaaS Motion Pro.
 4. Enter your license key: ${licenseKey}
 
 MANAGE YOUR WORKSTATIONS:
 ${dashboardUrl}
 
-Need support? Contact myselfsabbirhossen@gmail.com
+Need support? Contact our team at ${supportContactEmail}
 SaaS Motion Pro • sabbirhossen.site
 `;
 

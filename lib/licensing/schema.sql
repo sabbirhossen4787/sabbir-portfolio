@@ -90,6 +90,12 @@ CREATE TABLE IF NOT EXISTS payment_settings (
     bank_instructions TEXT NOT NULL DEFAULT 'Transfer the total amount via BEFTN/NPSB/Internet Banking and enter the bank transaction reference below.',
     bank_enabled INTEGER NOT NULL DEFAULT 1,
     usd_to_bdt_rate REAL NOT NULL DEFAULT 125.0,
+    plugin_download_url TEXT DEFAULT '',
+    support_email TEXT NOT NULL DEFAULT 'myselfsabbirhossen@gmail.com',
+    support_phone TEXT NOT NULL DEFAULT '+8801794232652',
+    creator_price_bdt INTEGER NOT NULL DEFAULT 1999,
+    studio_price_bdt INTEGER NOT NULL DEFAULT 3499,
+    lifetime_price_bdt INTEGER NOT NULL DEFAULT 5999,
     updated_at TEXT NOT NULL
 );
 

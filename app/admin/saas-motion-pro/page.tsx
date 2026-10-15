@@ -288,7 +288,7 @@ export default function AdminSaaSMotionProPage() {
                 <span className="font-bold text-neutral-300 uppercase tracking-wider font-mono text-[11px]">Creator Tier</span>
                 <p className="text-[10px] text-neutral-500">1 Workstation Seat</p>
                 <div className="flex items-center gap-1.5 pt-2">
-                  <span className="text-base font-bold text-white">$</span>
+                  <span className="text-base font-bold text-white">৳</span>
                   <input
                     type="number"
                     value={smp.pricing.creatorPrice}
@@ -302,7 +302,7 @@ export default function AdminSaaSMotionProPage() {
                 <span className="font-bold text-purple-300 uppercase tracking-wider font-mono text-[11px]">Studio Commercial (Popular)</span>
                 <p className="text-[10px] text-neutral-400">2 Workstation Seats</p>
                 <div className="flex items-center gap-1.5 pt-2">
-                  <span className="text-base font-bold text-white">$</span>
+                  <span className="text-base font-bold text-white">৳</span>
                   <input
                     type="number"
                     value={smp.pricing.studioPrice}
@@ -316,7 +316,7 @@ export default function AdminSaaSMotionProPage() {
                 <span className="font-bold text-neutral-300 uppercase tracking-wider font-mono text-[11px]">Enterprise VIP</span>
                 <p className="text-[10px] text-neutral-500">4 Workstation Seats</p>
                 <div className="flex items-center gap-1.5 pt-2">
-                  <span className="text-base font-bold text-white">$</span>
+                  <span className="text-base font-bold text-white">৳</span>
                   <input
                     type="number"
                     value={smp.pricing.enterprisePrice}
@@ -395,9 +395,9 @@ export default function AdminSaaSMotionProPage() {
           </p>
 
           <div className="flex items-center gap-4 pt-3 text-xs font-mono">
-            <span className="text-emerald-400 font-bold">Creator: ${smp.pricing.creatorPrice}</span>
-            <span className="text-purple-300 font-bold">Studio: ${smp.pricing.studioPrice}</span>
-            <span className="text-amber-400 font-bold">Enterprise: ${smp.pricing.enterprisePrice}</span>
+            <span className="text-emerald-400 font-bold">Creator: ৳{smp.pricing.creatorPrice}</span>
+            <span className="text-purple-300 font-bold">Studio: ৳{smp.pricing.studioPrice}</span>
+            <span className="text-amber-400 font-bold">Enterprise: ৳{smp.pricing.enterprisePrice}</span>
           </div>
         </div>
       </div>

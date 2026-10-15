@@ -227,7 +227,7 @@ reg add "HKCU\\Software\\Adobe\\CSXS.18" /v PlayerDebugMode /t REG_SZ /d "1" /f`
         <div className="space-y-1 text-purple-300/70">
           <div>macOS ZIP: <span className="text-purple-200 select-all">97b27c86abc2c389478974d7bba0d29ff1eb32baf07410df400ba7ecc963d0cc</span></div>
           <div>Windows ZIP: <span className="text-purple-200 select-all">1ed6300ef286ebb30e45ec17c7eab614ff60cab2eccd49f07c9e3692f3acf28d</span></div>
-          <div>Universal ZIP: <span className="text-purple-200 select-all">092b5cb86a28fd054384e556cdb68e38da6d5a8a0629d48f7a6b58a03440d8bc</span></div>
+          <div>Universal ZIP: <span className="text-purple-200 select-all">6d4f6da2b74f31d8ae2b646f9a47009519fe6d732f25cb1c5ca8737b59a41cbb</span></div>
         </div>
       </div>
     </div>

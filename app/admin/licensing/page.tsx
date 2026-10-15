@@ -134,6 +134,12 @@ interface PaymentSettings {
   bankInstructions: string;
   bankEnabled: boolean;
   usdToBdtRate: number;
+  pluginDownloadUrl?: string;
+  supportEmail?: string;
+  supportPhone?: string;
+  creatorPriceBdt?: number;
+  studioPriceBdt?: number;
+  lifetimePriceBdt?: number;
 }
 
 export default function SuperAdminLicensingDashboard() {
@@ -186,7 +192,13 @@ export default function SuperAdminLicensingDashboard() {
     bankRoutingNumber: '125272642',
     bankInstructions: 'Transfer via online banking (BEFTN/NPSB/RTGS) or cash deposit. Upload deposit slip or app screenshot.',
     bankEnabled: true,
-    usdToBdtRate: 125.0
+    usdToBdtRate: 125.0,
+    pluginDownloadUrl: '',
+    supportEmail: 'myselfsabbirhossen@gmail.com',
+    supportPhone: '+8801794232652',
+    creatorPriceBdt: 1999,
+    studioPriceBdt: 3499,
+    lifetimePriceBdt: 5999
   });
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsSuccess, setSettingsSuccess] = useState<string | null>(null);
@@ -272,13 +284,34 @@ export default function SuperAdminLicensingDashboard() {
     }
   };
 
-  const fetchPaymentSettings = async () => {
+  const fetchPaymentSettings = async (keyToUse = adminKey) => {
     try {
-      const res = await fetch('/api/payment/settings');
+      const headers: Record<string, string> = {};
+      if (keyToUse) headers['x-admin-key'] = keyToUse;
+
+      const res = await fetch('/api/admin/payment/settings', { headers });
       if (res.ok) {
         const data = await res.json();
-        if (data.settings) {
-          setPaymentSettings(data.settings);
+        const s = data.settings || data;
+        if (s && s.bkashNumber) {
+          setPaymentSettings((prev) => ({
+            ...prev,
+            ...s,
+            bankAccountHolder: s.bankAccountHolder || s.bankAccountName || prev.bankAccountHolder
+          }));
+        }
+      } else {
+        const pubRes = await fetch('/api/payment/settings');
+        if (pubRes.ok) {
+          const data = await pubRes.json();
+          const s = data.settings || data;
+          if (s && s.bkashNumber) {
+            setPaymentSettings((prev) => ({
+              ...prev,
+              ...s,
+              bankAccountHolder: s.bankAccountHolder || s.bankAccountName || prev.bankAccountHolder
+            }));
+          }
         }
       }
     } catch (err) {
@@ -1198,9 +1231,110 @@ export default function SuperAdminLicensingDashboard() {
                 </div>
               </div>
 
+              {/* Official Customer Download Package Link */}
+              <div className="p-5 rounded-2xl bg-black/40 border border-purple-500/20 space-y-3">
+                <div className="flex items-center gap-2 text-white font-bold text-sm">
+                  <ExternalLink className="w-4 h-4 text-purple-400" /> Official Customer Plugin Download URL (Google Drive / Cloud)
+                </div>
+                <p className="text-neutral-400 text-[11px] leading-relaxed">
+                  Paste your official Google Drive folder, direct download link, or authenticated release package URL here. This link will be automatically embedded in customer license delivery emails upon payment approval.
+                </p>
+                <div>
+                  <label className="block text-neutral-300 mb-1 font-medium">Official Download URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://drive.google.com/drive/folders/... or https://..."
+                    value={paymentSettings.pluginDownloadUrl || ''}
+                    onChange={(e) => setPaymentSettings({ ...paymentSettings, pluginDownloadUrl: e.target.value })}
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-purple-500/30 focus:border-purple-500 text-white font-mono outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Support Contact Information */}
+              <div className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-3">
+                <div className="flex items-center gap-2 text-white font-bold text-sm">
+                  <Mail className="w-4 h-4 text-blue-400" /> Customer Support &amp; Delivery Contacts
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-medium">Support Email Address</label>
+                    <input
+                      type="email"
+                      value={paymentSettings.supportEmail || 'myselfsabbirhossen@gmail.com'}
+                      onChange={(e) => setPaymentSettings({ ...paymentSettings, supportEmail: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-medium">Support WhatsApp / Phone</label>
+                    <input
+                      type="text"
+                      value={paymentSettings.supportPhone || '+8801794232652'}
+                      onChange={(e) => setPaymentSettings({ ...paymentSettings, supportPhone: e.target.value })}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Pricing in BDT */}
+              <div className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-3">
+                <div className="flex items-center gap-2 text-white font-bold text-sm">
+                  <CreditCard className="w-4 h-4 text-amber-400" /> SaaS Motion Pro Commercial Pricing (BDT ৳)
+                </div>
+                <p className="text-neutral-400 text-[11px]">
+                  Configure official display and checkout prices in Bangladeshi Taka (BDT).
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-medium">Creator (1 Seat) — BDT</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 font-mono">৳</span>
+                      <input
+                        type="number"
+                        min="100"
+                        step="1"
+                        value={paymentSettings.creatorPriceBdt ?? 1999}
+                        onChange={(e) => setPaymentSettings({ ...paymentSettings, creatorPriceBdt: parseInt(e.target.value) || 1999 })}
+                        className="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-medium">Studio (2 Seats) — BDT</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 font-mono">৳</span>
+                      <input
+                        type="number"
+                        min="100"
+                        step="1"
+                        value={paymentSettings.studioPriceBdt ?? 3499}
+                        onChange={(e) => setPaymentSettings({ ...paymentSettings, studioPriceBdt: parseInt(e.target.value) || 3499 })}
+                        className="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono outline-none"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-neutral-300 mb-1 font-medium">Enterprise (4 Seats) — BDT</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 font-mono">৳</span>
+                      <input
+                        type="number"
+                        min="100"
+                        step="1"
+                        value={paymentSettings.lifetimePriceBdt ?? 5999}
+                        onChange={(e) => setPaymentSettings({ ...paymentSettings, lifetimePriceBdt: parseInt(e.target.value) || 5999 })}
+                        className="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white font-mono outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Conversion Rate */}
               <div className="p-5 rounded-2xl bg-black/40 border border-white/5 space-y-3">
-                <div className="text-white font-bold text-sm">Currency Conversion Rate</div>
+                <div className="text-white font-bold text-sm">Currency Conversion Reference Rate</div>
                 <div className="max-w-xs">
                   <label className="block text-neutral-300 mb-1 font-medium">1 USD in BDT (Taka)</label>
                   <input
