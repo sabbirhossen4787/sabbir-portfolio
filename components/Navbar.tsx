@@ -14,6 +14,7 @@ export default function Navbar() {
 
   const links = [
     ['Home', '/'], ['About', '/#about'], ['Services', '/#services'], ['Portfolio', '/work'],
+    ['SaaS Motion Pro', '/saas-motion-pro'],
     ['Process', '/#process'], ['Testimonials', '/#testimonials'], ['Contact', '/#contact']
   ];
 
@@ -33,16 +34,34 @@ export default function Navbar() {
         </Link>
 
         <nav className="hidden md:flex items-center gap-7 text-xs uppercase tracking-wider text-neutral-400 font-medium">
-          {links.map(([label, href], i) => (
-            <Link 
-              key={label} 
-              href={resolveHref(href)} 
-              onClick={(e) => { if (isEditorPreview) e.preventDefault(); }}
-              className={i === 0 ? 'text-[#FF6B00] font-semibold' : 'hover:text-white transition'}
-            >
-              {label}
-            </Link>
-          ))}
+          {links.map(([label, href]) => {
+            const isActive = href === '/' 
+              ? pathname === '/' 
+              : href.startsWith('/#') 
+                ? pathname === '/' 
+                : pathname.startsWith(href);
+            const isSmp = href === '/saas-motion-pro';
+
+            return (
+              <Link 
+                key={label} 
+                href={resolveHref(href)} 
+                onClick={(e) => { if (isEditorPreview) e.preventDefault(); }}
+                className={
+                  isSmp
+                    ? (isActive 
+                        ? 'text-purple-400 font-bold flex items-center gap-1.5' 
+                        : 'text-purple-300/80 hover:text-purple-200 transition flex items-center gap-1.5')
+                    : (isActive 
+                        ? 'text-[#FF6B00] font-semibold' 
+                        : 'hover:text-white transition')
+                }
+              >
+                {isSmp && <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />}
+                {label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-3">

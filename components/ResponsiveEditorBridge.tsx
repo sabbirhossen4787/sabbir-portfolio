@@ -3,60 +3,37 @@
 import { useEffect, useState } from 'react';
 import { useSettings } from '@/context/SettingsContext';
 
-/**
- * Lightweight editor bridge used inside the iframe preview.
- * Synchronizes element selection without circular window height loops.
- */
 export default function ResponsiveEditorBridge() {
   const { data } = useSettings();
-  const [selected, setSelected] = useState<string>('');
-
-  const device = typeof window !== 'undefined'
-    ? (new URLSearchParams(window.location.search).get('device') as 'tablet' | 'mobile' | 'desktop' | null)
-    : null;
+  const [selectedPaths, setSelectedPaths] = useState<string[]>([]);
 
   useEffect(() => {
-    const previewDevice = typeof window !== 'undefined'
-      ? ((new URLSearchParams(window.location.search).get('device') || 'desktop') as 'tablet' | 'mobile' | 'desktop')
-      : 'desktop';
+    const searchParams = new URLSearchParams(window.location.search);
+    const previewDevice = (searchParams.get('device') || 'desktop') as 'tablet' | 'mobile' | 'desktop';
 
     const post = (message: Record<string, unknown>) => window.parent?.postMessage(message, window.location.origin);
-
-    const select = (el: HTMLElement) => {
-      const path = el.dataset.editorPath;
-      if (!path || ['hero.heroImage', 'hero.mobileHeroImage'].includes(path)) return;
-      setSelected(path);
-      post({ 
-        type: 'PORTFOLIO_EDITOR_SELECT_PATH', 
-        path, 
-        elementType: el.dataset.editorType || 'text', 
-        label: el.dataset.editorLabel || path, 
-        device: previewDevice 
-      });
-    };
 
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       const el = target?.closest?.('[data-editor-path]') as HTMLElement | null;
       if (el) {
         const path = el.dataset.editorPath;
-        if (path && ['hero.heroImage', 'hero.mobileHeroImage'].includes(path)) {
-          return;
-        }
+        if (!path) return;
         event.preventDefault();
         event.stopPropagation();
-        select(el);
+        
+        post({ 
+          type: 'PORTFOLIO_EDITOR_SELECT_PATH', 
+          path, 
+          elementType: el.dataset.elementType || 'text', 
+          label: el.dataset.editorLabel || path, 
+          device: previewDevice,
+          shiftKey: event.shiftKey
+        });
       }
     };
 
     const postHeight = () => {
-      const isHero = new URLSearchParams(window.location.search).get('section') === 'hero';
-      // Hero সেকশন ডিভাইস ফ্রেমের উচ্চতা নেবে, কোনো লুপ তৈরি করবে না
-      if (isHero) {
-        post({ type: 'PORTFOLIO_EDITOR_PREVIEW_READY', device: previewDevice });
-        return;
-      }
-
       const height = Math.max(
         document.documentElement.scrollHeight,
         document.body.scrollHeight,
@@ -73,23 +50,33 @@ export default function ResponsiveEditorBridge() {
     document.addEventListener('click', onClick, true);
     requestAnimationFrame(postHeight);
 
+    const onParentMsg = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin) return;
+      if (e.data?.type === 'PORTFOLIO_EDITOR_ACTIVE_PATHS') {
+        setSelectedPaths(e.data.paths || []);
+      }
+    };
+    window.addEventListener('message', onParentMsg);
+
     return () => {
       resizeObserver.disconnect();
       document.removeEventListener('click', onClick, true);
+      window.removeEventListener('message', onParentMsg);
     };
   }, [data]);
 
   useEffect(() => {
-    if (!selected || !device) return;
-    const el = document.querySelector(`[data-editor-path="${CSS.escape(selected)}"]`) as HTMLElement | null;
-    if (!el) return;
-    el.style.outline = '2px solid #FF6B00';
-    el.style.outlineOffset = '2px';
-    return () => {
-      el.style.outline = '';
-      el.style.outlineOffset = '';
-    };
-  }, [selected, device]);
+    document.querySelectorAll('[data-editor-path]').forEach((el) => {
+      const p = (el as HTMLElement).dataset.editorPath;
+      if (p && selectedPaths.includes(p)) {
+        (el as HTMLElement).style.outline = '2px solid #FF6B00';
+        (el as HTMLElement).style.outlineOffset = '2px';
+      } else {
+        (el as HTMLElement).style.outline = '';
+        (el as HTMLElement).style.outlineOffset = '';
+      }
+    });
+  }, [selectedPaths]);
 
   return null;
 }

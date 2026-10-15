@@ -87,6 +87,20 @@ export interface ProjectItem {
   gallery: GalleryItem[];
   pageSettings?: ProjectPageSettings;
   blocks?: ProjectBlock[];
+  behanceUrl?: string;
+  behanceEmbed?: string;
+  tags?: string[];
+  seoTitle?: string;
+  seoDesc?: string;
+  ogImage?: string;
+}
+
+export interface CategoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  order: number;
+  enabled: boolean;
 }
 
 export interface ServiceItem {
@@ -205,6 +219,41 @@ export interface CustomSection {
   blocks: CustomBlock[];
 }
 
+export interface PersonalInfo {
+  name: string;
+  title: string;
+  email: string;
+  phone: string;
+  whatsapp: string;
+  location: string;
+  website: string;
+}
+
+export interface SocialLinks {
+  facebook: string;
+  behance: string;
+  linkedin: string;
+  instagram: string;
+  youtube: string;
+  whatsapp: string;
+}
+
+export interface SEOSettings {
+  metaTitle: string;
+  metaDescription: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  canonicalUrl: string;
+  robots: string;
+}
+
+export interface BehanceSyncSettings {
+  profileUrl: string;
+  autoSync: boolean;
+  lastSync: string;
+}
+
 export interface SiteData {
   siteSettings: {
     siteName: string;
@@ -215,6 +264,11 @@ export interface SiteData {
     availableStatus: string;
     accentColor: string;
   };
+  personalInfo: PersonalInfo;
+  socialLinks: SocialLinks;
+  seoSettings: SEOSettings;
+  behanceSync: BehanceSyncSettings;
+  categories: CategoryItem[];
   homepageSections: SectionConfig[];
   customSections: CustomSection[];
   elementOffsets: Record<string, ElementOffset>;
@@ -249,13 +303,14 @@ export interface SiteData {
       accentColor: string;
       lineHeight: number;
     };
-    brands: string[];
+    brands: (string | { name: string; logoUrl: string | null })[];
     mobileHeroImage: string;
     mobileHeroImageX: number;
     mobileHeroImageY: number;
     mobileHeroImageScale: number;
     mobileReviewCardShow: boolean;
     decorativeLine: { x: number; y: number; width: number; height: number; scale: number; rotate: number; opacity: number; show: boolean };
+    primaryBtnUrl?: string;
   };
   about: {
     label: string;
@@ -294,18 +349,79 @@ export interface SiteData {
   };
   projects: ProjectItem[];
   media: MediaAsset[];
+  saasMotionPro?: {
+    hero: {
+      badgeText: string;
+      headline: string;
+      highlight: string;
+      subheadline: string;
+      primaryBtnText: string;
+      secondaryBtnText: string;
+      videoShowreelUrl?: string;
+    };
+    pricing: {
+      creatorPrice: number;
+      studioPrice: number;
+      enterprisePrice: number;
+      bannerText: string;
+    };
+    features: {
+      presetsCount: string;
+      ttsVoicesCount: string;
+      deviceSeatSummary: string;
+    };
+  };
 }
 
 export const initialCmsData: SiteData = {
   siteSettings: {
     siteName: 'Sabbir Hossen',
     brandTitle: 'Graphics Designer & Video Editor',
-    email: 'contact@sabbirhossen.com',
-    phone: '+880 1234 567890',
-    location: 'Dhaka, Bangladesh',
+    email: 'contact@sabbirhossen.site',
+    phone: '01794232652',
+    location: 'Bangladesh',
     availableStatus: 'Available for new projects',
-    accentColor: '#FF6B00'
+    accentColor: '#FF6B00',
   },
+  personalInfo: {
+    name: 'Sabbir Hossen',
+    title: 'Graphic Designer & Video Editor',
+    email: 'contact@sabbirhossen.site',
+    phone: '01794232652',
+    whatsapp: '01629774787',
+    location: 'Bangladesh',
+    website: 'sabbirhossen.site',
+  },
+  socialLinks: {
+    facebook: 'https://www.facebook.com/share/19ZRGTRK2V/',
+    behance: 'https://www.behance.net/sisabbirahamed',
+    linkedin: 'https://bd.linkedin.com/in/sabbir-hossen-60b22a212',
+    instagram: 'https://instagram.com',
+    youtube: 'https://youtube.com',
+    whatsapp: '01629774787',
+  },
+  seoSettings: {
+    metaTitle: 'Sabbir Hossen — Graphic Designer & Video Editor',
+    metaDescription: 'I create visual content that helps brands communicate, promote, and grow.',
+    ogTitle: 'Sabbir Hossen Portfolio',
+    ogDescription: 'Visual content creator & editor specializing in commercial advertising & brand visuals.',
+    ogImage: '',
+    canonicalUrl: 'https://sabbirhossen.site',
+    robots: 'index, follow',
+  },
+  behanceSync: {
+    profileUrl: 'https://www.behance.net/sisabbirahamed',
+    autoSync: false,
+    lastSync: 'Not synced yet',
+  },
+  categories: [
+    { id: 'cat-1', name: 'Graphic Design', slug: 'graphic-design', order: 1, enabled: true },
+    { id: 'cat-2', name: 'Brand Identity', slug: 'brand-identity', order: 2, enabled: true },
+    { id: 'cat-3', name: 'Social Media Design', slug: 'social-media-design', order: 3, enabled: true },
+    { id: 'cat-4', name: 'Thumbnail Design', slug: 'thumbnail-design', order: 4, enabled: true },
+    { id: 'cat-5', name: 'Video Editing', slug: 'video-editing', order: 5, enabled: true },
+    { id: 'cat-6', name: 'Motion Graphics', slug: 'motion-graphics', order: 6, enabled: true },
+  ],
   customSections: [],
   homepageSections: [
     { id: 'hero', name: 'Hero Section', enabled: true, order: 1 },
@@ -317,7 +433,7 @@ export const initialCmsData: SiteData = {
     { id: 'process', name: 'Process Flow', enabled: true, order: 7 },
     { id: 'tools', name: 'Tools I Use', enabled: true, order: 8 },
     { id: 'testimonials', name: 'What Clients Say', enabled: true, order: 9 },
-    { id: 'cta', name: 'Final CTA Banner', enabled: true, order: 10 }
+    { id: 'cta', name: 'Final CTA Banner', enabled: true, order: 10 },
   ],
   elementOffsets: {},
   responsiveElementOffsets: { mobile: {}, tablet: {} },
@@ -358,14 +474,14 @@ export const initialCmsData: SiteData = {
         backgroundColor: '#121318',
         borderRadius: 16,
         padding: 16,
-        zIndex: 20
-      }
+        zIndex: 20,
+      },
     },
     headlineStyle: {
       fontSize: 64,
       color: '#FFFFFF',
       accentColor: '#FF6B00',
-      lineHeight: 1.05
+      lineHeight: 1.05,
     },
     brands: ['envato', 'Spotify', 'YouTube', 'Google', 'NIKE', 'adidas', 'Canva'],
     mobileHeroImage: '',
@@ -373,7 +489,7 @@ export const initialCmsData: SiteData = {
     mobileHeroImageY: 0,
     mobileHeroImageScale: 100,
     mobileReviewCardShow: false,
-    decorativeLine: { x: 0, y: 0, width: 100, height: 1, scale: 1, rotate: 0, opacity: 0.7, show: true }
+    decorativeLine: { x: 0, y: 0, width: 100, height: 1, scale: 1, rotate: 0, opacity: 0.7, show: true },
   },
   about: {
     label: '● About Me',
@@ -385,7 +501,7 @@ export const initialCmsData: SiteData = {
     experienceYears: '6+',
     locationText: 'Based in Bangladesh',
     availabilityText: 'Available Worldwide',
-    btnText: 'More About Me'
+    btnText: 'More About Me',
   },
   servicesMeta: { eyebrow: 'MY SERVICES', title: 'What I Can Do', highlight: 'for You', description: 'Professional visual solutions to bring your ideas to life. From design to video, I help brands stand out.', buttonText: 'View All Services', buttonUrl: '/work' },
   services: [
@@ -393,13 +509,13 @@ export const initialCmsData: SiteData = {
     { id: 's2', num: '02', title: 'Video Editing', desc: 'Professional video editing for social media, YouTube and brands.', image: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600', order: 2, enabled: true },
     { id: 's3', num: '03', title: 'Product Creatives', desc: 'Eye-catching product visuals and advertising creatives.', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600', order: 3, enabled: true },
     { id: 's4', num: '04', title: 'Social Media Content', desc: 'Engaging content designed for all modern platforms.', image: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=600', order: 4, enabled: true },
-    { id: 's5', num: '05', title: 'YouTube & Creator', desc: 'Thumbnails, video content and complete creator support.', image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=600', order: 5, enabled: true }
+    { id: 's5', num: '05', title: 'YouTube & Creator', desc: 'Thumbnails, video content and complete creator support.', image: 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=600', order: 5, enabled: true },
   ],
   reels: [
     { id: 'r1', title: 'Product Commercial', views: '125K', client: 'Brand', thumbnail: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500', order: 1, published: true },
     { id: 'r2', title: 'Dynamic Streetwear', views: '342K', client: 'Apparel', thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500', order: 2, published: true },
     { id: 'r3', title: 'Headphone Beat Cut', views: '342K', client: 'Audio Tech', thumbnail: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500', order: 3, published: true },
-    { id: 'r4', title: 'Sports Car Cinema', views: '412K', client: 'Automotive', thumbnail: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500', order: 4, published: true }
+    { id: 'r4', title: 'Sports Car Cinema', views: '412K', client: 'Automotive', thumbnail: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500', order: 4, published: true },
   ],
   tools: [
     { id: 't1', name: 'Photoshop', tag: 'Ps', category: 'Design', enabled: true },
@@ -409,18 +525,18 @@ export const initialCmsData: SiteData = {
     { id: 't5', name: 'DaVinci Resolve', tag: 'Dv', category: 'Color', enabled: true },
     { id: 't6', name: 'CapCut', tag: 'Cc', category: 'Shorts', enabled: true },
     { id: 't7', name: 'Figma', tag: 'Fg', category: 'UI', enabled: true },
-    { id: 't8', name: 'Canva', tag: 'Cv', category: 'Graphics', enabled: true }
+    { id: 't8', name: 'Canva', tag: 'Cv', category: 'Graphics', enabled: true },
   ],
   process: [
     { id: 'pr1', num: '01', title: 'Understand', desc: 'Learn about your goals and requirements.', enabled: true },
     { id: 'pr2', num: '02', title: 'Plan', desc: 'Create a strategy and visual direction.', enabled: true },
     { id: 'pr3', num: '03', title: 'Create', desc: 'Design and edit with creativity.', enabled: true },
     { id: 'pr4', num: '04', title: 'Refine', desc: 'Get your feedback and make revisions.', enabled: true },
-    { id: 'pr5', num: '05', title: 'Deliver', desc: 'Final delivery with 100% satisfaction.', enabled: true }
+    { id: 'pr5', num: '05', title: 'Deliver', desc: 'Final delivery with 100% satisfaction.', enabled: true },
   ],
   testimonials: [
     { id: 'tm1', name: 'Client Name', role: 'Role / Company', quote: 'Sabbir delivered exactly what I needed. Creative, professional and super fast!', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80', rating: 5, published: true },
-    { id: 'tm2', name: 'Business Partner', role: 'Founder · Media Lab', quote: 'The visual quality and speed of delivery were truly international grade.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80', rating: 5, published: true }
+    { id: 'tm2', name: 'Business Partner', role: 'Founder · Media Lab', quote: 'The visual quality and speed of delivery were truly international grade.', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80', rating: 5, published: true },
   ],
   showreel: {
     title: 'Watch',
@@ -428,7 +544,7 @@ export const initialCmsData: SiteData = {
     description: 'A quick look at my editing style, visual quality and creative approach.',
     videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1',
     thumbnail: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1200',
-    duration: '01:24'
+    duration: '01:24',
   },
   cta: {
     eyebrow: "LET'S WORK TOGETHER",
@@ -436,8 +552,8 @@ export const initialCmsData: SiteData = {
     highlight: 'Project',
     description: "Let's create something amazing together! I'm always open to discussing new projects, ideas, or opportunities.",
     buttonText: 'Get In Touch',
-    buttonUrl: 'mailto:contact@sabbirhossen.com',
-    noteText: 'Open for new projects worldwide'
+    buttonUrl: 'mailto:contact@sabbirhossen.site',
+    noteText: 'Open for new projects worldwide',
   },
   projects: [
     {
@@ -459,11 +575,33 @@ export const initialCmsData: SiteData = {
       gallery: [
         { id: 'g1', url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200', layout: 'full', widthPercent: 100, alignment: 'center', caption: 'Master 4K Visual' },
         { id: 'g2', url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800', layout: 'half', widthPercent: 50, alignment: 'left', caption: 'Angle Variation' },
-        { id: 'g3', url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800', layout: 'half', widthPercent: 50, alignment: 'right', caption: 'Packaging Mockup' }
-      ]
-    }
+        { id: 'g3', url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800', layout: 'half', widthPercent: 50, alignment: 'right', caption: 'Packaging Mockup' },
+      ],
+    },
   ],
-  media: []
+  media: [],
+  saasMotionPro: {
+    hero: {
+      badgeText: 'After Effects CEP 6.0+ Plugin & Standalone Engine',
+      headline: 'Next-Gen Motion Suite for',
+      highlight: 'SaaS Creators & Editors',
+      subheadline: 'Supercharge your After Effects workflow with AI Voice Studio, 300+ physics curves, smart layer tools, and studio-grade presets built for high-converting promo videos.',
+      primaryBtnText: 'Get SaaS Motion Pro',
+      secondaryBtnText: 'Explore Features',
+      videoShowreelUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+    },
+    pricing: {
+      creatorPrice: 49,
+      studioPrice: 89,
+      enterprisePrice: 149,
+      bannerText: 'Limited Launch Offer — Save up to 50% on Perpetual Lifetime Licenses'
+    },
+    features: {
+      presetsCount: '300+',
+      ttsVoicesCount: '8 Studio Voices',
+      deviceSeatSummary: '1 to 4 Workstation Seats with Instant Seat Release'
+    }
+  },
 };
 
 function setNestedValue(obj: any, path: string, value: any): any {
@@ -503,6 +641,7 @@ interface SettingsContextType {
   updateResponsiveElementOffsetLive: (device: 'mobile' | 'tablet', path: string, offset: Partial<ElementOffset>) => void;
   commitResponsiveElementOffset: (device: 'mobile' | 'tablet', path: string, offset: Partial<ElementOffset>) => void;
   addProject: (project: ProjectItem) => void;
+  updateProject: (id: string, patch: Partial<ProjectItem>) => void;
   deleteProject: (id: string) => void;
   addMediaItem: (asset: MediaAsset) => void;
   deleteMediaItem: (id: string) => void;
@@ -527,6 +666,7 @@ const SettingsContext = createContext<SettingsContextType>({
   updateResponsiveElementOffsetLive: () => {},
   commitResponsiveElementOffset: () => {},
   addProject: () => {},
+  updateProject: () => {},
   deleteProject: () => {},
   addMediaItem: () => {},
   deleteMediaItem: () => {},
@@ -537,7 +677,7 @@ const SettingsContext = createContext<SettingsContextType>({
   canRedo: false,
   isSaving: false,
   saveStatus: '',
-  isContentLoaded: false
+  isContentLoaded: false,
 });
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
@@ -559,12 +699,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     fetch('/api/content')
-      .then(async res => {
+      .then(async (res) => {
         if (!res.ok) return null;
         const text = await res.text();
         return text ? JSON.parse(text) : null;
       })
-      .then(json => {
+      .then((json) => {
         if (json && typeof json === 'object') {
           const merged: SiteData = {
             ...initialCmsData,
@@ -572,9 +712,14 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
             elementOffsets: json.elementOffsets || {},
             responsiveElementOffsets: {
               mobile: json.responsiveElementOffsets?.mobile || {},
-              tablet: json.responsiveElementOffsets?.tablet || {}
+              tablet: json.responsiveElementOffsets?.tablet || {},
             },
             siteSettings: { ...initialCmsData.siteSettings, ...(json.siteSettings || {}) },
+            personalInfo: { ...initialCmsData.personalInfo, ...(json.personalInfo || {}) },
+            socialLinks: { ...initialCmsData.socialLinks, ...(json.socialLinks || {}) },
+            seoSettings: { ...initialCmsData.seoSettings, ...(json.seoSettings || {}) },
+            behanceSync: { ...initialCmsData.behanceSync, ...(json.behanceSync || {}) },
+            categories: json.categories?.length ? json.categories : initialCmsData.categories,
             hero: {
               ...initialCmsData.hero,
               ...(json.hero || {}),
@@ -586,12 +731,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
                 ...(json.hero?.reviewCard || {}),
                 style: {
                   ...initialCmsData.hero.reviewCard.style,
-                  ...(json.hero?.reviewCard?.style || {})
-                }
+                  ...(json.hero?.reviewCard?.style || {}),
+                },
               },
               headlineStyle: {
                 ...initialCmsData.hero.headlineStyle,
-                ...(json.hero?.headlineStyle || {})
+                ...(json.hero?.headlineStyle || {}),
               },
               mobileHeroImage: json.hero?.mobileHeroImage || '',
               mobileHeroImageX: json.hero?.mobileHeroImageX ?? 0,
@@ -600,8 +745,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
               mobileReviewCardShow: json.hero?.mobileReviewCardShow ?? false,
               decorativeLine: {
                 ...initialCmsData.hero.decorativeLine,
-                ...(json.hero?.decorativeLine || {})
-              }
+                ...(json.hero?.decorativeLine || {}),
+              },
             },
             about: { ...initialCmsData.about, ...(json.about || {}), aboutMobileImage: json.about?.aboutMobileImage || '' },
             homepageSections: json.homepageSections?.length ? json.homepageSections : initialCmsData.homepageSections,
@@ -615,7 +760,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
             showreel: { ...initialCmsData.showreel, ...(json.showreel || {}) },
             cta: { ...initialCmsData.cta, ...(json.cta || {}) },
             projects: json.projects?.length ? json.projects : initialCmsData.projects,
-            media: json.media || []
+            media: json.media || [],
           };
           if (hasLocalEditsRef.current) {
             setIsContentLoaded(true);
@@ -630,12 +775,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         }
         setIsContentLoaded(true);
       })
-      .catch(error => {
+      .catch((error) => {
         console.warn(error);
         setIsContentLoaded(true);
       });
   }, []);
 
+  // ⚠️ ভিজ্যুয়াল এডিটর লাইভ কমিউনিকেশন ব্রিজ (সচল করা হয়েছে)
   useEffect(() => {
     const isEditorPreview = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('editorPreview') === '1';
     if (!isEditorPreview) return;
@@ -643,8 +789,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const sendReady = () => window.parent?.postMessage({ type: 'PORTFOLIO_EDITOR_PREVIEW_READY' }, window.location.origin);
     
     const findPreviewElement = (path: string): HTMLElement | null => {
-      // হিরো ইমেজ ফিক্সড থাকবে, সিলেক্টেবল নয়
-      
       if (['hero.heroImage', 'hero.mobileHeroImage'].includes(path)) return null;
 
       const root = document.body;
@@ -681,35 +825,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       if (path === 'hero.experienceYears') return exact(d.hero.experienceYears)?.closest('div') as HTMLElement | null;
       if (path === 'hero.completedProjects') return exact(d.hero.completedProjects)?.closest('div') as HTMLElement | null;
       if (path === 'hero.happyClients') return exact(d.hero.happyClients)?.closest('div') as HTMLElement | null;
-      if (path === 'hero.decorativeLine') return root.querySelector('[data-editor-path="hero.decorativeLine"]') as HTMLElement | null;
-      if (path === 'hero.contentGroup') return root.querySelector('[data-editor-path="hero.contentGroup"]') as HTMLElement | null;
+      if (path === 'hero.brands') return root.querySelector('[data-editor-path="hero.brands"]') as HTMLElement | null;
       if (path === 'hero.dividerLine') return root.querySelector('[data-editor-path="hero.dividerLine"]') as HTMLElement | null;
       if (path === 'hero.decorativeLine') return root.querySelector('[data-editor-path="hero.decorativeLine"]') as HTMLElement | null;
 
-      if (path.startsWith('services[')) {
-        const i = Number(path.match(/services\[(\d+)\]/)?.[1]);
-        const item = d.services?.[i];
-        return item ? exact(item.title)?.closest('div') as HTMLElement | null : null;
-      }
-      if (path.startsWith('process[')) {
-        const i = Number(path.match(/process\[(\d+)\]/)?.[1]);
-        const item = d.process?.[i];
-        return item ? exact(item.title)?.closest('div') as HTMLElement | null : null;
-      }
-      if (path.startsWith('tools[')) {
-        const i = Number(path.match(/tools\[(\d+)\]/)?.[1]);
-        const item = d.tools?.[i];
-        return item ? exact(item.name)?.closest('div') as HTMLElement | null : null;
-      }
-      if (path.startsWith('testimonials[')) {
-        const i = Number(path.match(/testimonials\[(\d+)\]/)?.[1]);
-        const item = d.testimonials?.[i];
-        return item ? exact(item.name)?.closest('div') as HTMLElement | null : null;
-      }
-      if (path.includes('.content')) {
-        const v = getNestedValue(d, path);
-        return typeof v === 'string' ? exact(v) : null;
-      }
       return null;
     };
 
@@ -726,19 +845,15 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           type: 'PORTFOLIO_EDITOR_SELECT_PATH',
           path: el.dataset.editorPath,
           elementType: el.dataset.editorType || 'text',
-          label: el.dataset.editorLabel || el.dataset.editorPath
+          label: el.dataset.editorLabel || el.dataset.editorPath,
+          shiftKey: event.shiftKey
         }, window.location.origin);
       }
     };
 
-    const lockPreviewScroll = (event: Event) => { event.preventDefault(); event.stopPropagation(); };
-    const handlePreviewKey = (event: KeyboardEvent) => { if (['ArrowDown','ArrowUp','PageDown','PageUp','Home','End',' '].includes(event.key)) event.preventDefault(); };
-    
+    // ⚠️ মাউস স্ক্রোল আনলক করা হয়েছে যাতে নিচে ড্র্যাগ বা স্ক্রোল করে পুরো পেজ দেখা যায়
     const previewRoot = document.body;
     previewRoot.addEventListener('click', handleEditorClick, true);
-    previewRoot.addEventListener('wheel', lockPreviewScroll, { passive: false, capture: true });
-    previewRoot.addEventListener('touchmove', lockPreviewScroll, { passive: false, capture: true });
-    window.addEventListener('keydown', handlePreviewKey, true);
 
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
@@ -756,6 +871,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         }, window.location.origin);
         return;
       }
+      
+      // ✅ এটি লাইভ ডেটা গ্রহণ করে সাথে সাথে আইফ্রেম রি-রেন্ডার করায়
       if (event.data?.type !== 'PORTFOLIO_EDITOR_DATA') return;
       if (!event.data?.data || typeof event.data.data !== 'object') return;
       const incoming = event.data.data as SiteData;
@@ -770,9 +887,6 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     return () => { 
       window.removeEventListener('message', onMessage); 
       previewRoot.removeEventListener('click', handleEditorClick, true); 
-      previewRoot.removeEventListener('wheel', lockPreviewScroll, true); 
-      previewRoot.removeEventListener('touchmove', lockPreviewScroll, true); 
-      window.removeEventListener('keydown', handlePreviewKey, true); 
     };
   }, []);
 
@@ -848,8 +962,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       ...base,
       elementOffsets: {
         ...base.elementOffsets,
-        [path]: { ...current, ...offset }
-      }
+        [path]: { ...current, ...offset },
+      },
     };
     dataRef.current = next;
     hasLocalEditsRef.current = true;
@@ -863,8 +977,8 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       ...base,
       elementOffsets: {
         ...base.elementOffsets,
-        [path]: { ...current, ...offset }
-      }
+        [path]: { ...current, ...offset },
+      },
     };
     pushState(updated);
   }, [pushState]);
@@ -873,12 +987,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const base = dataRef.current;
     const bucket = base.responsiveElementOffsets?.[device] || {};
     const current = bucket[path] || base.elementOffsets[path] || { x: 0, y: 0, scale: 1, hide: false };
-    const next: SiteData = { 
-      ...base, 
-      responsiveElementOffsets: { 
-        ...(base.responsiveElementOffsets || { mobile: {}, tablet: {} }), 
-        [device]: { ...bucket, [path]: { ...current, ...offset } } 
-      } 
+    const next: SiteData = {
+      ...base,
+      responsiveElementOffsets: {
+        ...(base.responsiveElementOffsets || { mobile: {}, tablet: {} }),
+        [device]: { ...bucket, [path]: { ...current, ...offset } },
+      },
     };
     dataRef.current = next;
     hasLocalEditsRef.current = true;
@@ -889,30 +1003,35 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     const base = dataRef.current;
     const bucket = base.responsiveElementOffsets?.[device] || {};
     const current = bucket[path] || base.elementOffsets[path] || { x: 0, y: 0, scale: 1, hide: false };
-    const next: SiteData = { 
-      ...base, 
-      responsiveElementOffsets: { 
-        ...(base.responsiveElementOffsets || { mobile: {}, tablet: {} }), 
-        [device]: { ...bucket, [path]: { ...current, ...offset } } 
-      } 
+    const next: SiteData = {
+      ...base,
+      responsiveElementOffsets: {
+        ...(base.responsiveElementOffsets || { mobile: {}, tablet: {} }),
+        [device]: { ...bucket, [path]: { ...current, ...offset } },
+      },
     };
     pushState(next);
   }, [pushState]);
 
   const addProject = (project: ProjectItem) => {
-    pushState({ ...data, projects: [project, ...data.projects] });
+    pushState({ ...dataRef.current, projects: [project, ...dataRef.current.projects] });
+  };
+
+  const updateProject = (id: string, patch: Partial<ProjectItem>) => {
+    const updated = dataRef.current.projects.map((p) => (p.id === id ? { ...p, ...patch } : p));
+    pushState({ ...dataRef.current, projects: updated });
   };
 
   const deleteProject = (id: string) => {
-    pushState({ ...data, projects: data.projects.filter(p => p.id !== id) });
+    pushState({ ...dataRef.current, projects: dataRef.current.projects.filter((p) => p.id !== id) });
   };
 
   const addMediaItem = (asset: MediaAsset) => {
-    pushState({ ...data, media: [asset, ...data.media.filter(m => m.url !== asset.url)] });
+    pushState({ ...dataRef.current, media: [asset, ...dataRef.current.media.filter((m) => m.url !== asset.url)] });
   };
 
   const deleteMediaItem = (id: string) => {
-    pushState({ ...data, media: data.media.filter(m => m.id !== id) });
+    pushState({ ...dataRef.current, media: dataRef.current.media.filter((m) => m.id !== id) });
   };
 
   const saveToServer = async (): Promise<boolean> => {
@@ -927,7 +1046,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           cache: 'no-store',
-          body: JSON.stringify(snapshot)
+          body: JSON.stringify(snapshot),
         });
         const result = await res.json().catch(() => ({}));
         if (!res.ok || result?.success !== true) {
@@ -936,7 +1055,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         if (JSON.stringify(dataRef.current) === JSON.stringify(snapshot)) {
           hasLocalEditsRef.current = false;
         }
-        setSaveStatus(result?.storage === 'turso' ? 'Saved to Turso successfully!' : result?.storage === 'local-fallback' ? 'Saved locally (Turso unavailable)' : 'Saved locally successfully!');
+        setSaveStatus(
+          result?.storage === 'turso'
+            ? 'Saved to Turso successfully!'
+            : result?.storage === 'local-fallback'
+            ? 'Saved locally (Turso unavailable)'
+            : 'Saved locally successfully!'
+        );
         window.setTimeout(() => setSaveStatus(''), 3000);
         return true;
       } catch (error) {
@@ -967,6 +1092,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         updateResponsiveElementOffsetLive,
         commitResponsiveElementOffset,
         addProject,
+        updateProject,
         deleteProject,
         addMediaItem,
         deleteMediaItem,
@@ -977,7 +1103,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         canRedo: historyIndex < history.length - 1,
         isSaving,
         saveStatus,
-        isContentLoaded
+        isContentLoaded,
       }}
     >
       {children}
