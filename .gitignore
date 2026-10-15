@@ -27,3 +27,13 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# local databases & private uploads
+*.db
+*.sqlite
+*.sqlite3
+data/receipts/
+public/uploads/receipts/
+
+# heavy release binaries (hosted on R2 / external distribution)
+public/downloads/*.zip

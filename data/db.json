@@ -8,6 +8,81 @@
     "availableStatus": "Available for new projects",
     "accentColor": "#FF6B00"
   },
+  "personalInfo": {
+    "name": "Sabbir Hossen",
+    "title": "Graphic Designer & Video Editor",
+    "email": "myselsabbirahamed@gmail.com",
+    "phone": "01794232652",
+    "whatsapp": "01629774787",
+    "location": "Bangladesh",
+    "website": "sabbirhossen.site"
+  },
+  "socialLinks": {
+    "facebook": "https://www.facebook.com/share/19ZRGTRK2V/",
+    "behance": "https://www.behance.net/sisabbirahamed",
+    "linkedin": "https://bd.linkedin.com/in/sabbir-hossen-60b22a212",
+    "instagram": "https://instagram.com",
+    "youtube": "https://youtube.com",
+    "whatsapp": "01629774787"
+  },
+  "seoSettings": {
+    "metaTitle": "Sabbir Hossen — Graphic Designer & Video Editor",
+    "metaDescription": "I create visual content that helps brands communicate, promote, and grow.",
+    "ogTitle": "Sabbir Hossen Portfolio",
+    "ogDescription": "Visual content creator & editor specializing in commercial advertising & brand visuals.",
+    "ogImage": "",
+    "canonicalUrl": "https://sabbirhossen.site",
+    "robots": "index, follow"
+  },
+  "behanceSync": {
+    "profileUrl": "https://www.behance.net/sisabbirahamed",
+    "autoSync": false,
+    "lastSync": "Oct 1, 01:59 AM"
+  },
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "Graphic Design",
+      "slug": "graphic-design",
+      "order": 1,
+      "enabled": true
+    },
+    {
+      "id": "cat-2",
+      "name": "Brand Identity",
+      "slug": "brand-identity",
+      "order": 2,
+      "enabled": true
+    },
+    {
+      "id": "cat-3",
+      "name": "Social Media Design",
+      "slug": "social-media-design",
+      "order": 3,
+      "enabled": true
+    },
+    {
+      "id": "cat-4",
+      "name": "Thumbnail Design",
+      "slug": "thumbnail-design",
+      "order": 4,
+      "enabled": true
+    },
+    {
+      "id": "cat-5",
+      "name": "Video Editing",
+      "slug": "video-editing",
+      "order": 5,
+      "enabled": true
+    },
+    {
+      "id": "cat-6",
+      "name": "Motion Graphics",
+      "slug": "motion-graphics",
+      "order": 6,
+      "enabled": true
+    }
+  ],
   "customSections": [],
   "homepageSections": [
     {
@@ -73,14 +148,15 @@
   ],
   "elementOffsets": {
     "hero.headlineAccent": {
-      "x": 52,
-      "y": -4,
-      "scale": 1.14,
-      "hide": false
+      "x": 485,
+      "y": 7,
+      "scale": 2.37,
+      "hide": false,
+      "fontSize": 28
     },
     "hero.headlineStart": {
-      "x": 0,
-      "y": 0,
+      "x": -5,
+      "y": -8,
       "scale": 0.99,
       "hide": false
     },
@@ -92,13 +168,13 @@
     },
     "hero.secondaryBtnText": {
       "x": 20,
-      "y": 0,
+      "y": 30,
       "scale": 1.08,
       "hide": false
     },
     "hero.subheadline": {
       "x": 4,
-      "y": 0,
+      "y": 30,
       "scale": 1,
       "hide": false
     },
@@ -107,62 +183,98 @@
       "y": 0,
       "scale": 1,
       "hide": false
+    },
+    "hero.primaryBtnText": {
+      "x": 0,
+      "y": 30,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.completedProjects": {
+      "x": 0,
+      "y": 45,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.happyClients": {
+      "x": 0,
+      "y": 45,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.experienceYears": {
+      "x": 0,
+      "y": 45,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.dividerLine": {
+      "x": 0,
+      "y": 40,
+      "scale": 1,
+      "hide": false
+    },
+    "hero.reviewCard.style": {
+      "x": -383,
+      "y": 262,
+      "scale": 0.57,
+      "hide": false
     }
   },
   "responsiveElementOffsets": {
     "mobile": {
       "hero.headlineAccent": {
-        "x": 18,
-        "y": 9,
-        "scale": 1.09,
+        "x": 52,
+        "y": 91,
+        "scale": 1.28,
         "hide": false,
-        "fontSize": 34
+        "fontSize": 28
       },
       "hero.headlineStart": {
-        "x": 0,
-        "y": 15,
-        "scale": 1,
+        "x": -38,
+        "y": 104,
+        "scale": 0.76,
         "hide": false
       },
       "hero.subheadline": {
-        "x": 0,
-        "y": 5,
+        "x": 4,
+        "y": 88,
         "scale": 1,
         "hide": false
       },
       "hero.availabilityText": {
-        "x": -15,
-        "y": 20,
-        "scale": 0.84,
+        "x": -29,
+        "y": 120,
+        "scale": 0.73,
         "hide": false
       },
       "hero.primaryBtnText": {
         "x": 0,
-        "y": 0,
+        "y": 90,
         "scale": 1,
         "hide": false
       },
       "hero.secondaryBtnText": {
-        "x": 5,
-        "y": 0,
+        "x": 160,
+        "y": 43,
         "scale": 1,
         "hide": false
       },
       "hero.experienceYears": {
         "x": 0,
-        "y": 0,
+        "y": 45,
         "scale": 1,
         "hide": false
       },
       "hero.completedProjects": {
         "x": 0,
-        "y": 0,
+        "y": 45,
         "scale": 1,
         "hide": false
       },
       "hero.happyClients": {
         "x": 0,
-        "y": 0,
+        "y": 45,
         "scale": 1,
         "hide": false
       },
@@ -185,12 +297,98 @@
         "hide": false,
         "opacity": 1,
         "rotate": 0
+      },
+      "hero.reviewCard.style": {
+        "x": 5,
+        "y": 0,
+        "scale": 0.57,
+        "hide": false
+      },
+      "services[0].image": {
+        "x": 5,
+        "y": -10,
+        "scale": 1,
+        "hide": false
+      },
+      "services[0]": {
+        "x": 0,
+        "y": -15,
+        "scale": 1,
+        "hide": false
       }
     },
-    "tablet": {}
+    "tablet": {
+      "hero.headlineAccent": {
+        "x": 484,
+        "y": 269,
+        "scale": 2.37,
+        "hide": false,
+        "fontSize": 20
+      },
+      "hero.subheadline": {
+        "x": 4,
+        "y": 284,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.primaryBtnText": {
+        "x": 0,
+        "y": 289,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.secondaryBtnText": {
+        "x": 20,
+        "y": 289,
+        "scale": 1.08,
+        "hide": false
+      },
+      "hero.happyClients": {
+        "x": 0,
+        "y": 294,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.completedProjects": {
+        "x": 0,
+        "y": 294,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.experienceYears": {
+        "x": 0,
+        "y": 295,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.dividerLine": {
+        "x": 0,
+        "y": 289,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.headlineStart": {
+        "x": -4,
+        "y": 256,
+        "scale": 0.99,
+        "hide": false
+      },
+      "hero.availabilityText": {
+        "x": 0,
+        "y": 254,
+        "scale": 1,
+        "hide": false
+      },
+      "hero.reviewCard.style": {
+        "x": 233,
+        "y": 18,
+        "scale": 0.57,
+        "hide": false
+      }
+    }
   },
   "hero": {
-    "headlineStart": "Visual\nDesigner & ",
+    "headlineStart": "Visual\nDesigner &",
     "headlineStartFontSize": 64,
     "headlineAccent": "Video Editor",
     "headlineAccentFontSize": 64,
@@ -213,7 +411,7 @@
       "clientRole": "Business Owner",
       "style": {
         "x": -377,
-        "y": 263,
+        "y": 243,
         "width": 315,
         "height": "auto",
         "scale": 0.75,
@@ -500,6 +698,24 @@
   },
   "projects": [
     {
+      "id": "behance-1790798342203",
+      "slug": "gdk-esports-jersey-design-2022-esports-jersey-mockup",
+      "title": "GDK ESPORTS JERSEY DESIGN 2022 ESPORTS JERSEY MOCKUP",
+      "category": "Graphic Design",
+      "projectType": "Behance Showcase",
+      "year": "2026",
+      "client": "Sabbir Hossen",
+      "coverImage": "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=800",
+      "shortDesc": "Behance visual campaign by Sabbir Hossen.",
+      "fullDesc": "",
+      "featured": false,
+      "published": true,
+      "order": 2,
+      "gallery": [],
+      "behanceUrl": "https://www.behance.net/gallery/158969963/GDK-ESPORTS-JERSEY-DESIGN-2022-ESPORTS-JERSEY-MOCKUP",
+      "behanceEmbed": "<iframe src=\"https://www.behance.net/gallery/158969963/GDK-ESPORTS-JERSEY-DESIGN-2022-ESPORTS-JERSEY-MOCKUP\" height=\"600\" width=\"100%\" allowfullscreen frameborder=\"0\"></iframe>"
+    },
+    {
       "id": "p1",
       "slug": "product-campaign",
       "title": "Product Campaign",
@@ -603,5 +819,27 @@
   "reviewCardScale": 95,
   "reviewCardText": "Sabbir delivered exactly what I needed. Creative, professional and super fast!",
   "reviewClientName": "Client Name",
-  "reviewClientRole": "Business Owner"
+  "reviewClientRole": "Business Owner",
+  "saasMotionPro": {
+    "hero": {
+      "badgeText": "After Effects CEP 6.0+ Plugin & Standalone Engine",
+      "headline": "Next-Gen Motion Suite for",
+      "highlight": "SaaS Creators & Editors",
+      "subheadline": "Supercharge your After Effects workflow with AI Voice Studio, 300+ physics curves, smart layer tools, and studio-grade presets built for high-converting promo videos.",
+      "primaryBtnText": "Get SaaS Motion Pro",
+      "secondaryBtnText": "Explore Features",
+      "videoShowreelUrl": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+    },
+    "pricing": {
+      "creatorPrice": 49,
+      "studioPrice": 89,
+      "enterprisePrice": 149,
+      "bannerText": "Limited Launch Offer — Save up to 50% on Perpetual Lifetime Licenses"
+    },
+    "features": {
+      "presetsCount": "300+",
+      "ttsVoicesCount": "8 Studio Voices",
+      "deviceSeatSummary": "1 to 4 Workstation Seats with Instant Seat Release"
+    }
+  }
 }
