@@ -14,10 +14,13 @@ export const SERVER_PUBLIC_KEY =
 MCowBQYDK2VwAyEA2ypugDYS1z4pKvLLEuK3cdcvuCQEviCT8I9eZklihh0=
 -----END PUBLIC KEY-----`;
 
-// Private signing key must ONLY be read from environment variable; never hardcoded in source
+// Private signing key is strictly server-only and used to sign workstation activation tokens.
+// Loaded exclusively from server environment variables (e.g. LICENSE_SIGNING_PRIVATE_KEY).
+// NEVER commit private key material to source control.
 export const SERVER_PRIVATE_KEY =
-    process.env.LICENSING_PRIVATE_KEY ||
     process.env.LICENSE_SIGNING_PRIVATE_KEY ||
+    process.env.LICENSING_PRIVATE_KEY ||
     process.env.LICENSE_PRIVATE_KEY ||
     process.env.PRIVATE_SIGNING_KEY ||
     '';
+
