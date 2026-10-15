@@ -33,7 +33,26 @@ export async function POST(req: NextRequest) {
                     sql: "SELECT * FROM plans WHERE (id = ? OR slug = ?) AND active = 1",
                     args: [planId, planId]
                 });
-                const plan = planRes.rows[0];
+                let plan = planRes.rows[0];
+                if (!plan) {
+                    const now = new Date().toISOString();
+                    if (planId === 'plan_personal' || planId === 'personal') {
+                        await db.execute({
+                            sql: "INSERT OR IGNORE INTO plans (id, product_id, name, slug, price_cents, currency, billing_interval, max_devices, features_json, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            args: ['plan_personal', 'prod_smp_ae', 'Personal Lifetime', 'personal', 299, 'bdt', 'lifetime', 1, JSON.stringify(['1 Workstation Device', 'All 300+ FFX Presets', '9-Point Anchor Engine', 'Bounce Physics & Camera Rig', 'Lifetime Updates']), 1]
+                        });
+                        const recheck = await db.execute({ sql: "SELECT * FROM plans WHERE id = 'plan_personal'", args: [] });
+                        plan = recheck.rows[0];
+                    } else if (planId === 'plan_studio' || planId === 'studio' || planId === 'plan_studio_bdt') {
+                        await db.execute({
+                            sql: "INSERT OR IGNORE INTO plans (id, product_id, name, slug, price_cents, currency, billing_interval, max_devices, features_json, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                            args: ['plan_studio_bdt', 'prod_smp_ae', 'Studio Lifetime', 'studio_lifetime', 999, 'bdt', 'lifetime', 4, JSON.stringify(['4 Workstation Devices', 'Commercial Client Rights', 'All 300+ FFX Presets', 'Priority Support', 'Self-Service Seat Management']), 1]
+                        });
+                        const recheck = await db.execute({ sql: "SELECT * FROM plans WHERE id = 'plan_studio_bdt' OR id = 'plan_studio'", args: [] });
+                        plan = recheck.rows[0];
+                    }
+                }
+
                 if (plan) {
                     let userId = '';
                     const userRes = await db.execute({

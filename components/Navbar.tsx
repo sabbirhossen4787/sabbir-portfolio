@@ -14,6 +14,7 @@ export default function Navbar() {
 
   const links = [
     ['Home', '/'], ['About', '/#about'], ['Services', '/#services'], ['Portfolio', '/work'],
+    ['Store', '/store'],
     ['SaaS Motion Pro', '/saas-motion-pro'],
     ['Process', '/#process'], ['Testimonials', '/#testimonials'], ['Contact', '/#contact']
   ];
@@ -33,7 +34,7 @@ export default function Navbar() {
           <span className="font-bold tracking-wider text-sm sm:text-base text-white uppercase font-mono">{data.siteSettings?.siteName || 'SABBIR HOSSEN'}</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-7 text-xs uppercase tracking-wider text-neutral-400 font-medium">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-7 text-xs uppercase tracking-wider text-neutral-400 font-medium">
           {links.map(([label, href]) => {
             const isActive = href === '/' 
               ? pathname === '/' 

@@ -73,6 +73,7 @@ export default function Footer() {
             <Link href={sectionHref("about")} className="hover:text-white transition">About Me</Link>
             <Link href={sectionHref("services")} className="hover:text-white transition">Services</Link>
             <Link href="/work" className="hover:text-white transition">Portfolio Works</Link>
+            <Link href="/store" className="hover:text-white transition">Store</Link>
             <Link href={sectionHref("process")} className="hover:text-white transition">Work Process</Link>
             <Link href={sectionHref("testimonials")} className="hover:text-white transition">Testimonials</Link>
           </div>

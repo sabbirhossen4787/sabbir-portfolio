@@ -267,6 +267,24 @@ export async function initDb(): Promise<void> {
             // Table creation might run in schema.sql
         }
 
+        // Seed default Store Lifetime BDT plans if not present
+        try {
+            await db.execute({
+                sql: `INSERT OR IGNORE INTO plans (
+                    id, product_id, name, slug, price_cents, currency, billing_interval, max_devices, features_json, active
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                args: ['plan_personal', 'prod_smp_ae', 'Personal Lifetime', 'personal', 299, 'bdt', 'lifetime', 1, JSON.stringify(['1 Workstation Device', 'All 300+ FFX Presets', '9-Point Anchor Engine', 'Bounce Physics & Camera Rig', 'Lifetime Updates']), 1]
+            });
+            await db.execute({
+                sql: `INSERT OR IGNORE INTO plans (
+                    id, product_id, name, slug, price_cents, currency, billing_interval, max_devices, features_json, active
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                args: ['plan_studio_bdt', 'prod_smp_ae', 'Studio Lifetime', 'studio_lifetime', 999, 'bdt', 'lifetime', 4, JSON.stringify(['4 Workstation Devices', 'Commercial Client Rights', 'All 300+ FFX Presets', 'Priority Support', 'Self-Service Seat Management']), 1]
+            });
+        } catch {
+            // Plans may already exist
+        }
+
         initialized = true;
     } catch (err) {
         console.error("Database initialization error:", err);
