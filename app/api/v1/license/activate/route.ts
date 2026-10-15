@@ -38,9 +38,10 @@ export async function POST(req: NextRequest) {
         });
     } catch (err: unknown) {
         console.error("Activation endpoint error:", err);
+        const errMsg = err instanceof Error ? err.message : 'Internal server error processing activation request';
         return NextResponse.json({
             success: false,
-            error: 'Internal server error processing activation request'
+            error: errMsg
         }, {
             status: 500,
             headers: { 'Access-Control-Allow-Origin': '*' }

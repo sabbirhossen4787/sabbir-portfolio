@@ -47,15 +47,19 @@ export class CryptoSigner {
             key = this.privateKey;
         } else {
             key =
-                process.env.LICENSING_PRIVATE_KEY ||
                 process.env.LICENSE_SIGNING_PRIVATE_KEY ||
+                process.env.LICENSING_PRIVATE_KEY ||
                 process.env.LICENSE_PRIVATE_KEY ||
                 process.env.PRIVATE_SIGNING_KEY ||
                 SERVER_PRIVATE_KEY ||
                 '';
         }
         if (key && typeof key === 'string') {
-            return key.replace(/\\n/g, '\n');
+            let clean = key.trim().replace(/\\n/g, '\n').replace(/^["']|["']$/g, '');
+            if (clean && !clean.includes('BEGIN PRIVATE KEY')) {
+                clean = `-----BEGIN PRIVATE KEY-----\n${clean}\n-----END PRIVATE KEY-----`;
+            }
+            return clean;
         }
         return '';
     }
@@ -66,14 +70,18 @@ export class CryptoSigner {
             key = this.publicKey;
         } else {
             key =
-                process.env.LICENSING_PUBLIC_KEY ||
                 process.env.LICENSE_SIGNING_PUBLIC_KEY ||
+                process.env.LICENSING_PUBLIC_KEY ||
                 process.env.NEXT_PUBLIC_LICENSING_PUBLIC_KEY ||
                 SERVER_PUBLIC_KEY ||
                 '';
         }
         if (key && typeof key === 'string') {
-            return key.replace(/\\n/g, '\n');
+            let clean = key.trim().replace(/\\n/g, '\n').replace(/^["']|["']$/g, '');
+            if (clean && !clean.includes('BEGIN PUBLIC KEY')) {
+                clean = `-----BEGIN PUBLIC KEY-----\n${clean}\n-----END PUBLIC KEY-----`;
+            }
+            return clean;
         }
         return '';
     }
@@ -85,7 +93,7 @@ export class CryptoSigner {
     signToken(payload: Partial<TokenPayload>): string {
         const privKey = this.getSigningKey();
         if (!privKey) {
-            throw new Error("Cannot sign token: server private signing key is not configured.");
+            throw new Error("Cannot sign token: server private signing key is not configured. Please configure LICENSE_SIGNING_PRIVATE_KEY in your environment variables.");
         }
 
         const header = {

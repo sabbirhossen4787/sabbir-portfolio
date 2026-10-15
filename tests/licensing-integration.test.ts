@@ -236,6 +236,7 @@ async function runTestSuite() {
     if (failedTests > 0) {
         process.exit(1);
     }
+    process.exit(0);
 }
 
 runTestSuite().catch(err => {
