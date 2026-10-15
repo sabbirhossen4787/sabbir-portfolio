@@ -1,20 +1,55 @@
 /**
  * @fileoverview SaaS Motion Pro - db.ts
  * LibSQL / Turso database client connection with automatic local file fallback.
+ * Strictly enforces persistent remote database in production (no read-only /var/task SQLite crashes).
  * @copyright 2026 SaaS Motion Pro. All rights reserved.
  */
 
-import { createClient, Client } from '@libsql/client';
+import { createClient, type Client } from '@libsql/client';
 import fs from 'fs';
 import path from 'path';
+import { SCHEMA_STATEMENTS } from './schema';
 
 let client: Client | null = null;
 let initialized = false;
 
-export function getDb(): Client {
-    if (client) return client;
+export function getDatabaseConfig(): { url: string; authToken?: string; isRemote: boolean } {
+    // 1. Check primary and alias environment variables
+    const rawUrl = (
+        process.env.TURSO_DATABASE_URL ||
+        process.env.TURSO_URL ||
+        process.env.DATABASE_URL ||
+        process.env.LIBSQL_DATABASE_URL ||
+        ''
+    ).trim();
 
-    // Use TURSO_DATABASE_URL or fallback to local SQLite database in data/
+    const rawAuthToken = (
+        process.env.TURSO_AUTH_TOKEN ||
+        process.env.TURSO_TOKEN ||
+        process.env.DATABASE_AUTH_TOKEN ||
+        ''
+    ).trim();
+
+    const isProduction = process.env.NODE_ENV === 'production' || Boolean(process.env.VERCEL);
+
+    if (rawUrl) {
+        return {
+            url: rawUrl,
+            authToken: rawAuthToken || undefined,
+            isRemote: true
+        };
+    }
+
+    // 2. In production / Vercel Serverless environment:
+    // Strictly fail with actionable configuration guidance rather than crashing with SQLite error 14
+    if (isProduction) {
+        throw new Error(
+            'Production database connection failed: TURSO_DATABASE_URL is not configured. ' +
+            'Please add TURSO_DATABASE_URL and TURSO_AUTH_TOKEN to your Vercel Project Settings (Settings -> Environment Variables) and redeploy.'
+        );
+    }
+
+    // 3. Local development fallback
     const dataDir = path.join(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
         try {
@@ -24,16 +59,28 @@ export function getDb(): Client {
         }
     }
 
-    const defaultLocalDb = `file:${path.join(dataDir, 'saas_motion_pro.db')}`;
-    const url = process.env.TURSO_DATABASE_URL || defaultLocalDb;
-    const authToken = process.env.TURSO_AUTH_TOKEN || undefined;
+    return {
+        url: `file:${path.join(dataDir, 'saas_motion_pro.db')}`,
+        authToken: undefined,
+        isRemote: false
+    };
+}
 
+export function getDb(): Client {
+    if (client) return client;
+
+    const config = getDatabaseConfig();
     client = createClient({
-        url,
-        authToken
+        url: config.url,
+        authToken: config.authToken
     });
 
     return client;
+}
+
+export function _resetDbClientForTesting(): void {
+    client = null;
+    initialized = false;
 }
 
 export async function initDb(): Promise<void> {
@@ -41,20 +88,34 @@ export async function initDb(): Promise<void> {
     const db = getDb();
 
     try {
-        const schemaPath = path.join(process.cwd(), 'lib', 'licensing', 'schema.sql');
-        if (fs.existsSync(schemaPath)) {
-            const schemaSql = fs.readFileSync(schemaPath, 'utf8');
-            const statements = schemaSql
-                .split(';')
-                .map(s => s.trim())
-                .filter(s => s.length > 0);
-
-            for (const stmt of statements) {
-                await db.execute(stmt);
-            }
+        // 1. Execute embedded schema DDL safely
+        for (const stmt of SCHEMA_STATEMENTS) {
+            await db.execute(stmt);
         }
 
-        // Seed default product and plans if empty
+        // 2. Also execute schema.sql from disk if present (for backward compatibility in local dev)
+        try {
+            const schemaPath = path.join(process.cwd(), 'lib', 'licensing', 'schema.sql');
+            if (fs.existsSync(schemaPath)) {
+                const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+                const statements = schemaSql
+                    .split(';')
+                    .map(s => s.trim())
+                    .filter(s => s.length > 0 && !s.startsWith('--'));
+
+                for (const stmt of statements) {
+                    try {
+                        await db.execute(stmt);
+                    } catch {
+                        // Table/index likely already exists
+                    }
+                }
+            }
+        } catch {
+            // Embedded schema already executed successfully
+        }
+
+        // 3. Seed default product and plans if empty
         const prodCheck = await db.execute("SELECT COUNT(*) as count FROM products");
         const prodCount = Number(prodCheck.rows[0]?.count || 0);
 
@@ -100,10 +161,14 @@ export async function initDb(): Promise<void> {
                 });
             }
 
-            // Seed initial Admin User
+            // Seed initial Admin User and Owner
             await db.execute({
                 sql: "INSERT INTO users (id, email, password_hash, name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 args: ['usr_admin_master', 'admin@saasmotionpro.com', 'admin_hash_protected', 'SaaS Motion Pro Admin', 'admin', now, now]
+            });
+            await db.execute({
+                sql: "INSERT OR IGNORE INTO users (id, email, password_hash, name, role, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                args: ['usr_owner_sabbir', 'myselfsabbirhossen@gmail.com', 'admin_hash_protected', 'Sabbir Hossen', 'admin', now, now]
             });
 
             // Seed genuine legacy customer licenses from audited historical records
@@ -201,5 +266,6 @@ export async function initDb(): Promise<void> {
         initialized = true;
     } catch (err) {
         console.error("Database initialization error:", err);
+        throw err;
     }
 }
